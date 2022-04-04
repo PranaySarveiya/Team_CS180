@@ -3,17 +3,36 @@
 
 **Contributors:**  
 
-Pranay Sarveiya  
+Pranay Sarveiya, Justin Lyu, Tommy Chhur, Chandler Mahkorn, Fnu Azma  
 
-Justin Lyu
+[Dataset: US Accidents (2016 - 2021)](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)
 
 
-Tommy Chhur  
+  
+**Instructions**
 
-Chandler Mahkorn  
+Following [this](https://docs.djangoproject.com/en/4.0/intro/tutorial01/) loosely, check for more details
 
-Fnu Azma  
+First have django installed, check installation using:
 
-Dataset: US Accidents (2016 - 2021):  
+    \> py -m django --version
+cd to directory you want to store your code, then run:
 
-https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
+    \> django-admin startproject mysite
+
+this will create a mysite directory.
+
+Then run the dev server using:
+
+    \> py manage.py runserver
+    
+Ignore the warnings about unapplied database migrations.
+
+Now visit http://127.0.0.1:8000/ on your web browser.
+
+We can add apps using this command in the same directory as the manage.py
+
+    \> py manage.py startapp <appname>
+    
+this is the directory that will house your application. Check the instruction link for more details and examples.
+
