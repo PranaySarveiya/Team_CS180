@@ -12,8 +12,7 @@ Tommy Chhur
 
 Chandler Mahkorn  
 
-Fnu Azma
-  
+Fnu Azma  
 
 Dataset: US Accidents (2016 - 2021):  
 
