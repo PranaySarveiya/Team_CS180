@@ -61,4 +61,4 @@ From this point, keep following the instructions from the above link using 'hell
 
 We modified hello/views.py, added and modified hello/urls.py, and modified mysite/urls.py.
 
-After that, we can get a dummy output by going to http://localhost:8000/polls/
+After that, we can get a dummy output by going to http://localhost:8000/hello/
