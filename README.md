@@ -8,8 +8,29 @@ Pranay Sarveiya, Justin Lyu, Tommy Chhur, Chandler Mahkorn, Fnu Azma
 [Dataset: US Accidents (2016 - 2021)](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)
 
 
+**If you just want to run the server using this repo, follow this instruction**  
+
+Download the repo to a directory.  
+
+Check if you have django installed using  
+
+     \> py -m django --version  
+
+Then run
+
+     \> py manage.py runserver
+     
+There many be some unapplied migrations; ignore those.  
+
+Then in your browswer, go to this link:
+
+     http://localhost:8000/hello/
+     
+Done.  
+  ____________________________  
   
-**Instructions**
+  
+**Instructions for setting up yourself**
 
 Following [this](https://docs.djangoproject.com/en/4.0/intro/tutorial01/) loosely, check for more details
 
