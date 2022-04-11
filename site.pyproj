@@ -47,6 +47,7 @@
     <Compile Include="mysite\hello\apps.py" />
     <Compile Include="mysite\hello\migrations\__init__.py" />
     <Compile Include="mysite\hello\models.py" />
+    <Compile Include="mysite\hello\csv_read.py" />
     <Compile Include="mysite\hello\tests.py" />
     <Compile Include="mysite\hello\urls.py" />
     <Compile Include="mysite\hello\views.py" />
