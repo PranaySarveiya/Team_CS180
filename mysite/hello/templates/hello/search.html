@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<body>
+    <title>Query</title>
+</body>
+</head>
+
+<h1>
+    Submit query in form: "Column Name, Query"
+</h1>
+<form method="POST" action="">
+    {% csrf_token %}
+    <input type="text" name="textfield">
+    
+    <button type="submit">Submit</button>
+</form>
+</html>
