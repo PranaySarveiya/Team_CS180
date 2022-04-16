@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% comment %} <title>Simple table</title>
+    <link href="/hello/minimal-table.css" rel="stylesheet" type="text/css"> {% endcomment %}
+    <style>
+        td {
+            border: solid 2px lightgrey;
+        }
+    </style>
+</head>
+
+
+<h1>
+    The Top 5 States With The Most Accidents (WIP)
+</h1>
+
+<table>
+     
+    <tr>
+        <td> State Name </td>
+        <td> No. of Accidents </td>
+        <td> Percent of Total Accidents </td>
+    </tr>
+    
+    {%for result in states_name%} 
+    <tr>
+        <td> {{result}} </td> 
+        
+    </tr>
+    {%endfor%}
+
+
+
+</table>
+{% comment %} <p>{{html_string}}</p> {% endcomment %}
+<p>{{states}} </p>
+<p>{{states_name}}<p>
+<p>{{states_no}}<p>
+
+</html>
