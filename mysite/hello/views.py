@@ -12,7 +12,7 @@ statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL",
 
 
 def welcome(request):
-    return render(request, "hello/search.html")
+    return render(request, "hello/welcome.html")
 
 
 

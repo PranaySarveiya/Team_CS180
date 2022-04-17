@@ -8,13 +8,12 @@ class dataset:
 	def __init__(self):
 		self.list = []
 		self.path = os.path.abspath(os.path.dirname(__file__))
-
+		print("Opening csv file")
 		with open(self.path + "/US_Accidents_Dec21_updated.csv", "r") as data:
 			header = data.readline()
 			for row in data:
 				self.addRow(row.split(","))
-
-		print("Done!")
+		print("Done Reading csv file")
 
 	def addRow(self, line):
 		tmp = row_data()
