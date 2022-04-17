@@ -16,27 +16,25 @@
     The Top 5 States With The Most Accidents (WIP)
 </h1>
 
-<table>
-     
+<table>    
     <tr>
-        <td> State Name </td>
-        <td> No. of Accidents </td>
-        <td> Percent of Total Accidents </td>
+        <th> State Name </th>
+        {%for SN in states_name%} 
+        <td> {{SN}} </td> 
+        {%endfor%}
     </tr>
-    
-    {%for result in states_name%} 
     <tr>
-        <td> {{result}} </td> 
-        
+        <th> No. of Accidents </th>
+        {%for SO in states_no%} 
+        <td> {{SO}} </td> 
+        {%endfor%}
     </tr>
-    {%endfor%}
-
-
-
+    <tr>
+        <th> Percent of Total Accidents </th>
+        {%for P in percent%} 
+        <td> {{P}} </td> 
+        {%endfor%}
+    </tr>
 </table>
-{% comment %} <p>{{html_string}}</p> {% endcomment %}
-<p>{{states}} </p>
-<p>{{states_name}}<p>
-<p>{{states_no}}<p>
 
 </html>

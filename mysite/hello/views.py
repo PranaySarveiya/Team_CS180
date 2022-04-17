@@ -9,7 +9,7 @@ statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL",
           "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
           "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
           "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
-
+accidents = dataset()
 
 def welcome(request):
     return render(request, "hello/welcome.html")
@@ -17,8 +17,8 @@ def welcome(request):
 
 
 def index(request):
-    example = dataset()
-    row = example.getRow()
+    #accidents = dataset()
+    row = accidents.getRow()
     return HttpResponse(row.description)
 
 def search(request):
@@ -43,18 +43,18 @@ def SearchState(request):
 
 # changed to a helper function for the above search
 def AccidentByState(stateAbbreviation): #ToDo: need to integrate with state_select to display # of accidents for selected state
-    accidents = dataset()
+    #accidents = dataset()
     cnt = 0
     for row in accidents.list:
         if row.state == stateAbbreviation:
-            #NY = row.street + "\n"
+            #NY = row.street + "\n" #removed for now since we're not using it
             cnt += 1
             
     string = stateAbbreviation + " has " + str(cnt) + " accidents"
     return string
 
 def Top5States(request):
-    accidents = dataset()
+    #accidents = dataset()
     total = len(accidents.list)
     stateCount = []
     percent = []
