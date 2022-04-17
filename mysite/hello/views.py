@@ -4,6 +4,13 @@ from hello.csv_read import dataset
 import math
 # Create your views here.
 
+statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", 
+          "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", 
+          "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
+          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+
+
 def welcome(request):
     return render(request, "hello/search.html")
 
@@ -17,7 +24,13 @@ def index(request):
 def search(request):
     if request.method == 'POST':
         search_param = request.POST["textfield"]
-        return HttpResponse(search_param)
+        if search_param in statesAbv:
+            return HttpResponse(AccidentByState(search_param))
+        elif search_param == "Top 5":
+            return Top5States(request)
+        else:
+            print(search_param + " is not a state abbreviation or Top 5")   #for debugging
+            return render(request, "hello/search.html")
     else:
         return render(request, "hello/search.html")
 
@@ -28,25 +41,19 @@ def SearchState(request):
     else:
         return render(request, "hello/state_select.html")
 
-
-def AccidentByState(request): #ToDo: need to inegrate with state_select to display # of accidents for selected state
+# changed to a helper function for the above search
+def AccidentByState(stateAbbreviation): #ToDo: need to integrate with state_select to display # of accidents for selected state
     accidents = dataset()
     cnt = 0
     for row in accidents.list:
-        if row.state == "NY":
-            NY = row.street + "\n"
+        if row.state == stateAbbreviation:
+            #NY = row.street + "\n"
             cnt += 1
             
-    string = "New York has " + str(cnt) + " accidents"
-    return HttpResponse(string)
-
+    string = stateAbbreviation + " has " + str(cnt) + " accidents"
+    return string
 
 def Top5States(request):
-    statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", 
-          "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", 
-          "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
-          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
-          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
     accidents = dataset()
     total = len(accidents.list)
     stateCount = []
