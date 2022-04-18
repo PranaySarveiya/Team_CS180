@@ -1,23 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<body>
-    <title>Query</title>
-</body>
+    <body>
+        <title>Query</title>
+    </body>
+    <style>
+        #wrapper { text-align: center;}
+    </style>
 </head>
 
-<h1>
-    Submit query in form: "Column Name, Query"
-</h1>
-<h2>
-    Enter State Abbreviation for # of Accidents in that State. <br>
-    Enter "Top 5" for top 5 states with the most accidents. TODO
-</h2>
+<div id = "wrapper">
+    <h1>
+        Search For Car Accident Reports
+    </h1>
+    <h2>
+        Enter the category for the search and the query <br/>
+        Note: Searching by state uses state abbreviations
+    </h2>
 
-<form method="POST" action="">
-    {% csrf_token %}
-    <input type="text" name="textfield">
-    
-    <button type="submit">Submit</button>
-</form>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{form}}
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h2>
+        Car Accident Trivia:
+    </h2>
+    <a href = '../top-5-states/'><p>Top 5 states for number of car accidents</p></a>
+</div>
 </html>
