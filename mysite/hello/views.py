@@ -3,13 +3,20 @@ from django.http import HttpResponse
 from hello.csv_read import dataset
 from .forms import SearchForm
 import math
+import time
 # Create your views here.
 
-statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL",
-          "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME",
-          "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH",
-          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", 
+          "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", 
+          "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", 
+          "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
           "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+statesName = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Washington DC", "Delaware", "Florida",
+               "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine",
+               "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+               "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+               "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
+
 accidents = dataset()
 
 def welcome(request):
@@ -63,42 +70,44 @@ def AccidentByState(stateAbbreviation): #ToDo: need to integrate with state_sele
         if row.state == stateAbbreviation:
             #NY = row.street + "\n" #removed for now since we're not using it
             cnt += 1
-
-    string = stateAbbreviation + " has " + str(cnt) + " accidents"
+    stateName = statesName[statesAbv.index(stateAbbreviation)]
+    string = stateName + " has " + str(cnt) + " accidents"
     return string
 
 def Top5States(request):
     #accidents = dataset()
     total = len(accidents.list)
-    stateCount = []
-    percent = []
-    for i in statesAbv:
-        cnt = 0
-        for row in accidents.list:
-            if i == row.state:
-                cnt += 1
-        stateCount.append(cnt)
-        percent.append(math.trunc(cnt/total*10000)/100)
+    stateCount = [0] * 51
+    percent = [0] * 51
+
+    s_time = time.time()
+    for row in accidents.list:
+        pos = statesAbv.index(row.state)
+        stateCount[pos] += 1
+    for i in range(len(percent)):
+        percent[i] = math.trunc(stateCount[i]/total*10000)/100
+        
+    print("2nd search-",time.time()-s_time)
 
     states = zip(statesAbv, stateCount, percent)
-
+    
     states = sorted(states, key=lambda tup: tup[1], reverse = True)[:5]
     # print(total)
     string = ""
     html_string = ""
-
-
-    for i in range(5):
-        string = states[i][0] + " " + str(states[i][1])
-        percent.append (math.trunc(states[i][1]/total*10000)/100)
-        string = "<tr>" + "<td>" + str(i+1) + "</td>" + "<td>" + states[i][0] + "</td>" + "<td>" + str(states[i][1]) + "</td>" + "<td>" + str(percent[i]) + "</td>" + "</tr>" + "\n"
-        html_string += string
+    
+    
+    # for i in range(5):
+    #     string = states[i][0] + " " + str(states[i][1])
+    #     percent.append (math.trunc(states[i][1]/total*10000)/100)
+    #     string = "<tr>" + "<td>" + str(i+1) + "</td>" + "<td>" + states[i][0] + "</td>" + "<td>" + str(states[i][1]) + "</td>" + "<td>" + str(percent[i]) + "</td>" + "</tr>" + "\n"
+    #     html_string += string
         # print (html_string)
         #html_string = html.unescape(html_string)
-
+        
 
     #print(states)
     states_name, states_no, percent = zip(*states)
-
-    return render(request, 'hello/top_5_states.html',
+    
+    return render(request, 'hello/top_5_states.html', 
                    {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})

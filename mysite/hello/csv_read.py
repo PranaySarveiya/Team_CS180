@@ -11,14 +11,19 @@ class dataset:
 		print("Opening csv file")
 		with open(self.path + "/US_Accidents_Dec21_updated.csv", "r") as data:
 			header = data.readline()
+			# cnt = 0
 			for row in data:
 				self.addRow(row.split(","))
+				# cnt += 1
+				# if(cnt == 1300000):
+				# 	break
 		print("Done Reading csv file")
 
 
 	def addRow(self, line):
 		tmp = row_data()
-
+  
+		tmp.ID = line[0]
 		tmp.severity = line[1]
 		tmp.start_time = line[2]
 		tmp.end_time = line[3]
