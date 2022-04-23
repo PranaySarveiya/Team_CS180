@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
 from .forms import SearchForm
+from .forms import InsertForm
+from .forms import DeleteForm
+from .forms import UpdateForm
 import math
 import time
 # Create your views here.
@@ -31,17 +34,23 @@ def index(request):
 
 def search(request):
     if request.method == 'POST':
+        #get user input
         form = SearchForm(request.POST)
+        #check if input is valid
         if form.is_valid():
+            #grabs puts the user input into variables
             category = form.cleaned_data['category']
             search_text = form.cleaned_data['search_text']
 
+            #call function to return num of accidents in a state if category is state
             if(category == 'state'):
                 return SearchByState(search_text)
+            #TODO: implement search for city
             elif(category == 'city'):
                 print(category, search_text)
 
-
+    #if request is not a post, or form input is not valid simply load search.html
+    #pass form to the html file
     form = SearchForm()
     return render(request, "hello/search.html", {'form': form})
 
@@ -111,3 +120,93 @@ def Top5States(request):
     
     return render(request, 'hello/top_5_states.html', 
                    {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})
+
+def Modify(request):
+    #inserting
+    if (request.method == 'POST' and 'insert' in request.POST):
+        #get user input
+        form = InsertForm(request.POST)
+        #check if input is valid
+        if form.is_valid():
+            #grabs puts the user input into variables
+            severity = form.cleaned_data['severity']
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+            description = form.cleaned_data['description']
+            street = form.cleaned_data['street']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            
+            #TODO: Somehow insert this information into our file
+
+    #deleting
+    elif (request.method == 'POST' and 'delete' in request.POST):
+        #get user input
+        form = DeleteForm(request.POST)
+        #check if input is valid
+        if form.is_valid():
+            #grabs puts the user input into variables
+            selection = form.cleaned_data['selection']
+            search_text = form.cleaned_data['search_text']
+
+            #TODO: Somehow delete this information from our file
+            #delete all entries with id matching search_text
+            if(selection == 'id'):
+                print("delete by id")
+            #delete all entries with state matching search_text
+            elif(selection == 'state'):
+                print("delete by state")
+            #delete all entries with city matching search_text
+            elif(selection == 'city'):
+                print("delete by city")
+    #updating
+    elif (request.method == 'POST' and 'update' in request.POST):
+         #get user input
+        form = UpdateForm(request.POST)
+        #check if input is valid
+        if form.is_valid():
+            #grabs puts the user input into variables
+            id = form.cleaned_data['id']
+            updated_field = form.cleaned_data['updated_field']
+            new_value = form.cleaned_data['new_value']
+
+            #TODO: implement updating the selected field from the car accident specified by id
+            #update severity field with new_value for car with id
+            if(updated_field == 'severity'):
+                print('update severity field')
+            #update start_time field with new_value for car accident with id value
+            elif(updated_field == 'start_time'):
+                print('update start_time')
+            #update end_time field with new_value for car accident with id value
+            elif(updated_field == 'end_time'):
+                print('update end_time')
+            #update description field with new_value for car accident with id value
+            elif(updated_field == 'description'):
+                print('update description')
+            #update street field with new_value for car accident with id value
+            elif(updated_field == 'street'):
+                print('update street')
+            #update city field with new_value for car accident with id value
+            elif(updated_field == 'city'):
+                print('update city')
+            #update state field with new_value for car accident with id value
+            elif(updated_field == 'state'):
+                print('update state')
+            
+    #if the backup button is clicked
+    elif (request.method == 'POST' and 'backup' in request.POST):
+        #TODO: create a backup when this button is clicked
+        print("backup")
+    #if the import button is clicked
+    elif (request.method == 'POST' and 'import' in request.POST):
+        #TODO: implement importing stuff
+        print('import')
+    
+    
+
+    #if request is not a post, or form input is not valid simply load modify.html
+    #pass form to the html file
+    form = InsertForm()
+    form2 = DeleteForm()
+    form3 = UpdateForm()
+    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3})
