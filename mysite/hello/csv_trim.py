@@ -12,11 +12,16 @@ with open(path + "\\US_Accidents_Dec21_updated.csv", "r") as file:
 
 newFilename = "US_Accidents_" + str(numberOfRows) + "_rows.csv"
 increment = math.floor(len(lines) / numberOfRows)
-row = 0
+row = 1
 count = 0
 with open(path + "\\" + newFilename, "w+") as newFile:
+    newFile.write(lines[0]) # Write header
+
     while (count <= numberOfRows):
-            newFile.write(lines[row])
+            line = lines[row].split(",")
+            del line[0] # Remove original index (A-######)
+            line.insert(0, "A-" + str(count + 1))
+            newFile.write(",".join(line)) # Re-join the list into a string of values separated by commas
             row += increment
             count += 1
 
