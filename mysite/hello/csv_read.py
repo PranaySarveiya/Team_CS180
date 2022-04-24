@@ -8,8 +8,23 @@ class dataset:
 	def __init__(self):
 		self.list = []
 		self.path = os.path.abspath(os.path.dirname(__file__))
-		print("Opening csv file")
+		print("Opening csv file: US_Accidents_Dec21_updated.csv")
 		with open(self.path + "/US_Accidents_Dec21_updated.csv", "r") as data:
+			header = data.readline()
+			# cnt = 0
+			for row in data:
+				self.addRow(row.split(","))
+				# cnt += 1
+				# if(cnt == 1300000):
+				# 	break
+		print("Done Reading csv file")
+
+	def __init__(self, filename):
+		self.list = []
+		self.path = os.path.abspath(os.path.dirname(__file__))
+		self.filename = filename
+		print("Opening csv file: " + self.filename + ".csv")
+		with open(self.path + "/" + self.filename + ".csv", "r") as data:
 			header = data.readline()
 			# cnt = 0
 			for row in data:

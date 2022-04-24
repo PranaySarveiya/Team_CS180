@@ -21,19 +21,18 @@ statesName = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorad
                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
 
-accidents = dataset()
+filename = "US_Accidents_60000_rows"
+currentBackup = ""
+accidents = dataset(filename)
 
-def updateDataset(accidents_old):
-    print("updating accident dataset...")
+def updateDataset(current, importSet):
+    print("Updating accident dataset...")
     global accidents
-    del accidents_old
-    accidents = dataset()
-
+    del current
+    accidents = dataset(importSet)
 
 def welcome(request):
     return render(request, "hello/welcome.html")
-
-
 
 def index(request):
     #accidents = dataset()
@@ -153,10 +152,10 @@ def DeleteRow(deletionParameter, columnNumber):
         cnt = 0
         lines = []
         path = os.path.abspath(os.path.dirname(__file__))
-        with open(path + "/US_Accidents_Dec21_updated.csv", "r") as dataRead:
+        with open(path + "/" + filename + ".csv", "r") as dataRead:
             header = dataRead.readline()
             lines = dataRead.readlines()
-        with open(path + "/US_Accidents_Dec21_updated.csv", "w") as dataWrite:
+        with open(path + "/" + filename + ".csv", "w") as dataWrite:
             for line in lines:
                 lineList = line.split(",")
                 if(lineList[columnNumber] != deletionParameter):
@@ -184,7 +183,7 @@ def InsertRow(insertRow):
     
     #print("elements to be inserted", insertRow)
     path = os.path.abspath(os.path.dirname(__file__))
-    with open(path + "/US_Accidents_Dec21_updated.csv", "a") as dataWrite: # used the file created by csv_trim.py to test
+    with open(path + "/" + filename + ".csv", "a") as dataWrite: # used the file created by csv_trim.py to test
         csvString = ",".join(csvRow)
         dataWrite.write(csvString + "\n") #write to file
 
@@ -195,33 +194,25 @@ def InsertRow(insertRow):
 
 def Backup():
     path = os.path.abspath(os.path.dirname(__file__))
-    with open(path + "/US_Accidents_Dec21_updated.csv", "r") as file:
+    with open(path + "/" + filename + ".csv", "r") as file:
         lines = file.readlines()
         
-    backUpFilename = "US_Accidents_Dec21_updated_backup.csv"
     backupPath = path + "/backupCSV/"
-    with open(backupPath + backUpFilename, "w+") as newFile:
-        print("creating backup...")
+    if (not os.path.exists(backupPath)):
+        os.makedirs(backupPath)
+
+    global currentBackup
+    currentBackup = filename + "_backup_" + str(math.floor(time.time()))
+
+    with open(backupPath + "/" + currentBackup + ".csv", "w+") as newFile:
+        print("Creating backup '" + currentBackup + ".csv'...")
         for line in lines:
             newFile.write(line)
 
 def Import():
     path = os.path.abspath(os.path.dirname(__file__))
-    backupPath = path + "/backupCSV/"
-    with open(backupPath + "/US_Accidents_Dec21_updated_backup.csv", "r") as file:
-        header = file.readline()
-        lines = file.readlines()
-        
-    overwriteFilename = "/US_Accidents_Dec21_updated.csv"
-    
-    with open(path + overwriteFilename, "w") as newFile:
-        newFile.write(header)
-        print("creating backup...")
-        for line in lines:
-            newFile.write(line)
-            
-    global accidents 
-    updateDataset(accidents)
+    global accidents, currentBackup
+    updateDataset(accidents, "/backupCSV/" + currentBackup)
         
 def Modify(request):
     #inserting
