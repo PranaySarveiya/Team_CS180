@@ -162,6 +162,28 @@ def DeleteRow(deletionParameter, columnNumber):
     print("Done Reading csv file for delete method")
     print("# of rows deleted: " + str(cnt))
 
+def InsertRow(insertRow):
+    csvRow = [""] * 47
+    csvRow[0] = insertRow[0] #ID
+    csvRow[1] = insertRow[1] #severity
+    csvRow[2] = insertRow[2] #start_time
+    csvRow[3] = insertRow[3] #end_time
+    csvRow[9] = insertRow[4] #description
+    csvRow[11] = insertRow[5] #street
+    csvRow[13] = insertRow[6] #city
+    csvRow[15] = insertRow[7] #state
+    
+    #print("elements to be inserted", insertRow)
+    path = os.path.abspath(os.path.dirname(__file__))
+    with open(path + "/US_Accidents_Dec21_updated.csv", "a") as dataWrite: # used the file created by csv_trim.py to test
+        csvString = ",".join(csvRow)
+        dataWrite.write(csvString + "\n") #write to file
+
+        accidents.addRow(csvString.split(",")) #add to data structure
+    
+        #print("appended row",vars(accidents.list[-1]))
+    
+        
 def Modify(request):
     #inserting
     if (request.method == 'POST' and 'insert' in request.POST):
@@ -178,7 +200,12 @@ def Modify(request):
             city = form.cleaned_data['city']
             state = form.cleaned_data['state']
             
+            insertList = []
+            ID = "A-" + str(len(accidents.list)+1)
+            insertList.extend((ID,str(severity), start_time, end_time, description, street, city, state))
+            
             #TODO: Somehow insert this information into our file
+            InsertRow(insertList)
 
     #deleting
     elif (request.method == 'POST' and 'delete' in request.POST):
