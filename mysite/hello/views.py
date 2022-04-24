@@ -23,6 +23,13 @@ statesName = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorad
 
 accidents = dataset()
 
+def updateDataset(accidents_old):
+    print("updating accident dataset...")
+    global accidents
+    del accidents_old
+    accidents = dataset()
+
+
 def welcome(request):
     return render(request, "hello/welcome.html")
 
@@ -101,6 +108,7 @@ def AccidentByState(stateAbbreviation): #ToDo: need to integrate with state_sele
 def Top5States(request):
     #accidents = dataset()
     total = len(accidents.list)
+    #print("total entries:", total)
     stateCount = [0] * 51
     percent = [0] * 51
 
@@ -109,7 +117,8 @@ def Top5States(request):
         pos = statesAbv.index(row.state)
         stateCount[pos] += 1
     for i in range(len(percent)):
-        percent[i] = math.trunc(stateCount[i]/total*10000)/100
+        if(total != 0): #if given an empty csv file
+            percent[i] = math.trunc(stateCount[i]/total*10000)/100
         
     print("2nd search-",time.time()-s_time)
 
@@ -196,7 +205,24 @@ def Backup():
         for line in lines:
             newFile.write(line)
 
-
+def Import():
+    path = os.path.abspath(os.path.dirname(__file__))
+    backupPath = path + "/backupCSV/"
+    with open(backupPath + "/US_Accidents_Dec21_updated_backup.csv", "r") as file:
+        header = file.readline()
+        lines = file.readlines()
+        
+    overwriteFilename = "/US_Accidents_Dec21_updated.csv"
+    
+    with open(path + overwriteFilename, "w") as newFile:
+        newFile.write(header)
+        print("creating backup...")
+        for line in lines:
+            newFile.write(line)
+            
+    global accidents 
+    updateDataset(accidents)
+        
 def Modify(request):
     #inserting
     if (request.method == 'POST' and 'insert' in request.POST):
@@ -285,6 +311,7 @@ def Modify(request):
     elif (request.method == 'POST' and 'import' in request.POST):
         #TODO: implement importing stuff
         print('import')
+        Import()
     
     
 
