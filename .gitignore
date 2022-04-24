@@ -1,5 +1,5 @@
-mysite/hello/__pycache__/
-mysite/mysite/__pycache__/
+mysite/hello/__pycache__/*
+mysite/mysite/__pycache__/*
 mysite/US_Accidents_Dec21_updated.csv
 mysite/hello/US_Accidents_Dec21_updated.csv
 mysite/hello/migrations/__pycache__/

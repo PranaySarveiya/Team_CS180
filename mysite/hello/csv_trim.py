@@ -1,20 +1,23 @@
 import math
-import time
 import os
 import sys
 
 numberOfRows = int(sys.argv[1])
+path = os.path.abspath(os.path.dirname(__file__))
 
-with open("US_Accidents_Dec21_updated.csv", "r") as file:
+with open(path + "\\US_Accidents_Dec21_updated.csv", "r") as file:
     lines = file.readlines()
 
 
 
-newFilename = "US_Accidents_Dec21_updated_deletethisendpart.csv"
-with open(newFilename, "w+") as newFile:
-    for line in lines:
-        if(numberOfRows >= 0):
-            newFile.write(line)
-            numberOfRows -= 1
-        else:
-            break
+newFilename = "US_Accidents_" + str(numberOfRows) + "_rows.csv"
+increment = math.floor(len(lines) / numberOfRows)
+row = 0
+count = 0
+with open(path + "\\" + newFilename, "w+") as newFile:
+    while (count <= numberOfRows):
+            newFile.write(lines[row])
+            row += increment
+            count += 1
+
+    newFile.close()
