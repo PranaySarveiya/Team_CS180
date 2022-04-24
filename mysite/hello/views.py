@@ -183,7 +183,20 @@ def InsertRow(insertRow):
     
         #print("appended row",vars(accidents.list[-1]))
     
+
+def Backup():
+    path = os.path.abspath(os.path.dirname(__file__))
+    with open(path + "/US_Accidents_Dec21_updated.csv", "r") as file:
+        lines = file.readlines()
         
+    backUpFilename = "US_Accidents_Dec21_updated_backup.csv"
+    backupPath = path + "/backupCSV/"
+    with open(backupPath + backUpFilename, "w+") as newFile:
+        print("creating backup...")
+        for line in lines:
+            newFile.write(line)
+
+
 def Modify(request):
     #inserting
     if (request.method == 'POST' and 'insert' in request.POST):
@@ -267,6 +280,7 @@ def Modify(request):
     elif (request.method == 'POST' and 'backup' in request.POST):
         #TODO: create a backup when this button is clicked
         print("backup")
+        Backup()
     #if the import button is clicked
     elif (request.method == 'POST' and 'import' in request.POST):
         #TODO: implement importing stuff
