@@ -7,6 +7,7 @@ from .forms import DeleteForm
 from .forms import UpdateForm
 import math
 import time
+import os
 # Create your views here.
 
 statesAbv = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", 
@@ -44,17 +45,18 @@ def search(request):
 
             #call function to return num of accidents in a state if category is state
             if(category == 'state'):
-                return SearchByState(search_text)
+                return SearchByState(request, search_text)
             #TODO: implement search for city
             elif(category == 'city'):
                 print(category, search_text)
+                return SearchByCity(request, search_text)
 
     #if request is not a post, or form input is not valid simply load search.html
     #pass form to the html file
     form = SearchForm()
     return render(request, "hello/search.html", {'form': form})
 
-def SearchByState(search_param):
+def SearchByState(request, search_param):
     if search_param in statesAbv:
         return HttpResponse(AccidentByState(search_param))
     # elif search_param == "Top 5":
@@ -63,6 +65,19 @@ def SearchByState(search_param):
         form = SearchForm()
         print(search_param + " is not a state abbreviation or Top 5")   #for debugging
         return render(request, "hello/search.html", {'form': form})
+
+def SearchByCity(request, search_param):
+        try:
+            cnt = 0
+            for row in accidents.list:
+                if row.city == search_param:
+                    cnt += 1
+            message = "City " + search_param + " has " + str(cnt) + " accidents"
+            return HttpResponse(message)
+        except Exception as e:
+            print(e)
+            form = SearchForm()
+            return render(request, "hello/search.html", {'form': form})
 
 def SearchState(request):
     if request.method == 'POST':
@@ -121,6 +136,32 @@ def Top5States(request):
     return render(request, 'hello/top_5_states.html', 
                    {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})
 
+
+
+def DeleteRow(deletionParameter, columnNumber):
+    try:
+        print("Opening csv file for delete method")
+        cnt = 0
+        lines = []
+        path = os.path.abspath(os.path.dirname(__file__))
+        with open(path + "/US_Accidents_Dec21_updated.csv", "r") as dataRead:
+            header = dataRead.readline()
+            lines = dataRead.readlines()
+        with open(path + "/US_Accidents_Dec21_updated.csv", "w") as dataWrite:
+            for line in lines:
+                lineList = line.split(",")
+                if(lineList[columnNumber] != deletionParameter):
+                    dataWrite.write(line)
+                else:
+                    cnt += 1
+                    if(cnt < 25):
+                        print(lineList[columnNumber])
+    except Exception as e:
+        print("Something went wrong when deleting")
+        print(e)
+    print("Done Reading csv file for delete method")
+    print("# of rows deleted: " + str(cnt))
+
 def Modify(request):
     #inserting
     if (request.method == 'POST' and 'insert' in request.POST):
@@ -149,16 +190,18 @@ def Modify(request):
             selection = form.cleaned_data['selection']
             search_text = form.cleaned_data['search_text']
 
-            #TODO: Somehow delete this information from our file
             #delete all entries with id matching search_text
             if(selection == 'id'):
                 print("delete by id")
+                DeleteRow(search_text, 0)
             #delete all entries with state matching search_text
             elif(selection == 'state'):
                 print("delete by state")
+                DeleteRow(search_text, 15)
             #delete all entries with city matching search_text
             elif(selection == 'city'):
                 print("delete by city")
+                DeleteRow(search_text, 13)
     #updating
     elif (request.method == 'POST' and 'update' in request.POST):
          #get user input
