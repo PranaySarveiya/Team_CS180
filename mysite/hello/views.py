@@ -36,7 +36,7 @@ def updateDataset(current, importSet):
     # Re-write base dataset with imported data
     with open(os.path.abspath(os.path.dirname(__file__)) + "/" + filename + ".csv", "w") as baseFile:
         for row in accidents.list:
-            baseFile.write(row.split(","))
+            baseFile.write(",".join(row.toList()))
 
     baseFile.close()
 
