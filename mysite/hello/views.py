@@ -29,7 +29,16 @@ def updateDataset(current, importSet):
     print("Updating accident dataset...")
     global accidents
     del current
+
+    # Reload accident dataset with imported data
     accidents = dataset(importSet)
+
+    # Re-write base dataset with imported data
+    with open(os.path.abspath(os.path.dirname(__file__)) + "/" + filename + ".csv", "w") as baseFile:
+        for row in accidents.list:
+            baseFile.write(row.split(","))
+
+    baseFile.close()
 
 def welcome(request):
     return render(request, "hello/welcome.html")
@@ -144,31 +153,27 @@ def Top5States(request):
     return render(request, 'hello/top_5_states.html', 
                    {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})
 
-
-
-def DeleteRow(deletionParameter, columnNumber):
+def DeleteRow(column, value):
     try:
-        print("Opening csv file for delete method")
-        cnt = 0
-        lines = []
+        # Delete the given rows
+        count = accidents.removeRow(column, value)
+
+        # Now write the changed dataset to the base file
         path = os.path.abspath(os.path.dirname(__file__))
-        with open(path + "/" + filename + ".csv", "r") as dataRead:
-            header = dataRead.readline()
-            lines = dataRead.readlines()
-        with open(path + "/" + filename + ".csv", "w") as dataWrite:
-            for line in lines:
-                lineList = line.split(",")
-                if(lineList[columnNumber] != deletionParameter):
-                    dataWrite.write(line)
-                else:
-                    cnt += 1
-                    if(cnt < 25):
-                        print(lineList[columnNumber])
+        strList = accidents.toList()
+
+        with open(path + "/" + filename + ".csv", "w+") as baseFile:
+            for row in strList:
+                baseFile.write(str(row))
+
+            baseFile.close()
+
+        print("Deleted " + str(count) + " rows")
+        print("Done Reading csv file for delete method")
+
     except Exception as e:
         print("Something went wrong when deleting")
         print(e)
-    print("Done Reading csv file for delete method")
-    print("# of rows deleted: " + str(cnt))
 
 def InsertRow(insertRow):
     csvRow = [""] * 47
@@ -188,14 +193,18 @@ def InsertRow(insertRow):
         dataWrite.write(csvString + "\n") #write to file
 
         accidents.addRow(csvString.split(",")) #add to data structure
-    
-        #print("appended row",vars(accidents.list[-1]))
-    
 
+        dataWrite.close()
+    
 def Backup():
     path = os.path.abspath(os.path.dirname(__file__))
-    with open(path + "/" + filename + ".csv", "r") as file:
-        lines = file.readlines()
+    strList = accidents.toList()
+
+    with open(path + "\\" + filename + ".csv", "w+") as baseFile:
+        for row in strList:
+            baseFile.write(str(row))
+
+        baseFile.close()
         
     backupPath = path + "/backupCSV/"
     if (not os.path.exists(backupPath)):
@@ -206,8 +215,10 @@ def Backup():
 
     with open(backupPath + "/" + currentBackup + ".csv", "w+") as newFile:
         print("Creating backup '" + currentBackup + ".csv'...")
-        for line in lines:
-            newFile.write(line)
+        for row in strList:
+            newFile.write(str(row))
+
+        newFile.close()
 
 def Import():
     path = os.path.abspath(os.path.dirname(__file__))
@@ -250,53 +261,82 @@ def Modify(request):
             #delete all entries with id matching search_text
             if(selection == 'id'):
                 print("delete by id")
-                DeleteRow(search_text, 0)
-            #delete all entries with state matching search_text
-            elif(selection == 'state'):
-                print("delete by state")
-                DeleteRow(search_text, 15)
+                DeleteRow(0, search_text)
+
             #delete all entries with city matching search_text
             elif(selection == 'city'):
                 print("delete by city")
-                DeleteRow(search_text, 13)
+                DeleteRow(13, search_text)
+
+            #delete all entries with state matching search_text
+            elif(selection == 'state'):
+                print("delete by state")
+                DeleteRow(15, search_text)
     #updating
     elif (request.method == 'POST' and 'update' in request.POST):
-         #get user input
+         # Get user input
         form = UpdateForm(request.POST)
         #check if input is valid
         if form.is_valid():
-            #grabs puts the user input into variables
-            id = form.cleaned_data['id']
+            # Puts the user input into variables
+            rowId = form.cleaned_data['id']
             updated_field = form.cleaned_data['updated_field']
             new_value = form.cleaned_data['new_value']
 
-            #TODO: implement updating the selected field from the car accident specified by id
-            #update severity field with new_value for car with id
+            # Update specified field with new_value
             if(updated_field == 'severity'):
-                print('update severity field')
-            #update start_time field with new_value for car accident with id value
+                print('Update severity field')
+                if (accidents.updateRow(1, rowId, new_value)):
+                    print("Successfully updated severity field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update severity field for ID "  + str(rowId))
+
             elif(updated_field == 'start_time'):
-                print('update start_time')
-            #update end_time field with new_value for car accident with id value
+                print('Update start_time')
+                if (accidents.updateRow(2, rowId, new_value)):
+                    print("Successfully updated start_time field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update start_time field for ID "  + str(rowId))
+
             elif(updated_field == 'end_time'):
-                print('update end_time')
-            #update description field with new_value for car accident with id value
+                print('Update end_time')
+                if (accidents.updateRow(3, rowId, new_value)):
+                    print("Successfully updated end_time field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update end_time field for ID "  + str(rowId))
+
             elif(updated_field == 'description'):
-                print('update description')
-            #update street field with new_value for car accident with id value
+                print('Update description')
+                if (accidents.updateRow(9, rowId, new_value)):
+                    print("Successfully updated description field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update description field for ID "  + str(rowId))
+
             elif(updated_field == 'street'):
-                print('update street')
-            #update city field with new_value for car accident with id value
+                print('Update street')
+                if (accidents.updateRow(11, rowId, new_value)):
+                    print("Successfully updated street field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update street field for ID "  + str(rowId))
+
             elif(updated_field == 'city'):
-                print('update city')
-            #update state field with new_value for car accident with id value
+                print('Update city')
+                if (accidents.updateRow(13, rowId, new_value)):
+                    print("Successfully updated city field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update city field for ID "  + str(rowId))
+
             elif(updated_field == 'state'):
-                print('update state')
+                print('Update state')
+                if (accidents.updateRow(15, rowId, new_value)):
+                    print("Successfully updated state field for ID "  + str(rowId))
+                else:
+                    print("ERROR: Could not update state field for ID "  + str(rowId))
             
     #if the backup button is clicked
     elif (request.method == 'POST' and 'backup' in request.POST):
         #TODO: create a backup when this button is clicked
-        print("backup")
+        print("Backup")
         Backup()
     #if the import button is clicked
     elif (request.method == 'POST' and 'import' in request.POST):
