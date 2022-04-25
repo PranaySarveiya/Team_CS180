@@ -242,7 +242,9 @@ def Modify(request):
             state = form.cleaned_data['state']
             
             insertList = []
-            ID = "A-" + str(len(accidents.list)+1)
+            latestRow = accidents.list[len(accidents.list) - 1]
+            latestID = latestRow.ID.split("-")
+            ID = "A-" + str(int(latestID[1]) + 1)
             insertList.extend((ID,str(severity), start_time, end_time, description, street, city, state))
             
             #TODO: Somehow insert this information into our file
@@ -341,7 +343,7 @@ def Modify(request):
     #if the import button is clicked
     elif (request.method == 'POST' and 'import' in request.POST):
         #TODO: implement importing stuff
-        print('import')
+        print('Import')
         Import()
     
     
