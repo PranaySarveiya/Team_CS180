@@ -334,6 +334,15 @@ def Modify(request):
                     print("Successfully updated state field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update state field for ID "  + str(rowId))
+
+            path = os.path.abspath(os.path.dirname(__file__))
+            strList = accidents.toList()
+
+            with open(path + "/" + filename + ".csv", "w+") as baseFile:
+                for row in strList:
+                    baseFile.write(str(row))
+
+                baseFile.close()
             
     #if the backup button is clicked
     elif (request.method == 'POST' and 'backup' in request.POST):
