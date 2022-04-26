@@ -288,61 +288,52 @@ def Modify(request):
             # Update specified field with new_value
             if(updated_field == 'severity'):
                 print('Update severity field')
-                if (accidents.updateRow(1, rowId, new_value)):
+                if (accidents.updateRow(1, rowId, new_value, filename)):
                     print("Successfully updated severity field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update severity field for ID "  + str(rowId))
 
             elif(updated_field == 'start_time'):
                 print('Update start_time')
-                if (accidents.updateRow(2, rowId, new_value)):
+                if (accidents.updateRow(2, rowId, new_value, filename)):
                     print("Successfully updated start_time field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update start_time field for ID "  + str(rowId))
 
             elif(updated_field == 'end_time'):
                 print('Update end_time')
-                if (accidents.updateRow(3, rowId, new_value)):
+                if (accidents.updateRow(3, rowId, new_value, filename)):
                     print("Successfully updated end_time field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update end_time field for ID "  + str(rowId))
 
             elif(updated_field == 'description'):
                 print('Update description')
-                if (accidents.updateRow(9, rowId, new_value)):
+                if (accidents.updateRow(9, rowId, new_value, filename)):
                     print("Successfully updated description field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update description field for ID "  + str(rowId))
 
             elif(updated_field == 'street'):
                 print('Update street')
-                if (accidents.updateRow(11, rowId, new_value)):
+                if (accidents.updateRow(11, rowId, new_value, filename)):
                     print("Successfully updated street field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update street field for ID "  + str(rowId))
 
             elif(updated_field == 'city'):
                 print('Update city')
-                if (accidents.updateRow(13, rowId, new_value)):
+                if (accidents.updateRow(13, rowId, new_value, filename)):
                     print("Successfully updated city field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update city field for ID "  + str(rowId))
 
             elif(updated_field == 'state'):
                 print('Update state')
-                if (accidents.updateRow(15, rowId, new_value)):
+                if (accidents.updateRow(15, rowId, new_value, filename)):
                     print("Successfully updated state field for ID "  + str(rowId))
                 else:
                     print("ERROR: Could not update state field for ID "  + str(rowId))
-
-            path = os.path.abspath(os.path.dirname(__file__))
-            strList = accidents.toList()
-
-            with open(path + "/" + filename + ".csv", "w+") as baseFile:
-                for row in strList:
-                    baseFile.write(str(row))
-
-                baseFile.close()
             
     #if the backup button is clicked
     elif (request.method == 'POST' and 'backup' in request.POST):

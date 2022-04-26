@@ -157,7 +157,7 @@ class dataset:
 		# Return NoneType if nothing is found
 		return None
 
-	def updateRow(self, cmd, rowId, value):
+	def updateRow(self, cmd, rowId, value, filename):
 		# Get the row we want to change
 		for i in range(len(self.list)):
 			if self.list[i].ID == rowId:
@@ -177,6 +177,16 @@ class dataset:
 					self.list[i].city = value
 				elif (cmd == 15):
 					self.list[i].state = value
+
+				# Cast dataset into a list
+				strList = self.toList()
+
+				# Write out the list to the given file
+				with open(self.path + "/" + filename + ".csv", "w+") as updateFile:
+					for row in strList:
+						updateFile.write(str(row))
+
+					updateFile.close()
 
 				# Return 1 to say that the row was updated
 				return 1
