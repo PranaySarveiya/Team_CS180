@@ -42,4 +42,3 @@ class UpdateForm(forms.Form):
     id = forms.CharField(label = 'ID')
     updated_field = forms.ChoiceField(label = 'Field to update', choices = UPDATE_CHOICES)
     new_value = forms.CharField(label = 'New value for field')
-
