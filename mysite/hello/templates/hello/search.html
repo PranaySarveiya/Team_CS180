@@ -1,43 +1,60 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <body>
-        <title>Query</title>
-    </body>
+    <title>Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type = "text/css" href = "{% static 'css/style.css' %}">
     <style>
-        #wrapper { text-align: center;}
+        form{
+            padding: 150px;
+        }
     </style>
 </head>
 
-<div id = "wrapper">
-    <h1>
-        Search For Car Accident Reports
-    </h1>
-    <h2>
-        Enter the category for the search and the query <br/>
-        Note: Searching by state uses state abbreviations
-    </h2>
 
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{form}}
+<body>
+    <nav>
+        <div class = "logo">
+            <h4>Car Accident Database</h4>
+        </div>
+        <ul class = "nav-links">
+            <li>
+                <a href ="/hello/welcome/">Home</a>
+            </li>
+            <li>
+                <a href ="/hello/search/">Search</a>
+            </li>
+            <li>
+                <a href ="/hello/modify/">Modify</a>
+            </li>
+        </ul>
+    </nav>
+    <div id = "wrapper">
+        <h1>
+            Search For Car Accident Reports
+        </h1>
+        <h2>
+            Enter the category for the search and the query <br/>
+            Note: Searching by state uses state abbreviations
+        </h2>
 
-        <button type="submit">Submit</button>
-    </form>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{form}}
 
-    <br/>
-    <br/>
-    <br/>
-    <a href = '../modify/'><p>Modify the database</p></a>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <h2>
-        Car Accident Trivia:
-    </h2>
-    <a href = '../top-5-states/'><p>Top 5 states for number of car accidents</p></a>
-</div>
+            <button type="submit">Submit</button>
+        </form>
+
+
+        <h2>
+            Car Accident Trivia:
+        </h2>
+        <a href = '/hello/top-5-states/'><p>Top 5 states for number of car accidents</p></a>
+    </div>
+</body>
+
+
 </html>
