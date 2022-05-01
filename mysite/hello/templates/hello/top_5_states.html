@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     {% comment %} <title>Simple table</title>
     <link href="/hello/minimal-table.css" rel="stylesheet" type="text/css"> {% endcomment %}
+    <script src = "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <style>
         td {
             border: solid 2px lightgrey;
@@ -13,7 +14,7 @@
 
 
 <h1>
-    The Top 5 States With The Most Accidents (WIP)
+    The Top 5 States With The Most Accidents
 </h1>
 
 <table>    
@@ -36,5 +37,65 @@
         {%endfor%}
     </tr>
 </table>
+
+</br>
+</br>
+
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{%for SN in states_name%}'{{SN}}',{%endfor%}],
+            datasets: [{
+                label: '% of total accidents',
+                data: [{%for P in percent%}'{{P}}',{%endfor%}],
+                backgroundColor: [
+                    'rgba(255, 0, 0, .75)',
+                    'rgba(0, 0, 255, .75)',
+                    'rgba(255, 130, 0, .75)',
+                    'rgba(0, 255, 1, .75)',
+                    'rgba(215, 0, 255, .75)',
+                ],
+                borderColor: [
+                    'rgba(255, 0, 0, 1)',
+                    'rgba(0, 0, 255, 1)',
+                    'rgba(255, 130, 0, 1)',
+                    'rgba(0, 255, 1, 1)',
+                    'rgba(215, 0, 255, 1)',
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    display:true,
+                    beginAtZero:true,
+                    title: {
+                        display: true,
+                        text: 'State Name'
+                      }
+                },
+                y: {
+                    display:true,
+                    beginAtZero:true,
+                    title: {
+                        display: true,
+                        text: 'Percent of Total Accidents %'
+                      }
+                }
+            },
+            plugins: {
+                legend: {
+                  display: false
+                }
+              },
+        }
+    });
+</script>
 
 </html>
