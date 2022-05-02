@@ -38,6 +38,12 @@ def welcome(request):
     """
     return render(request, "hello/welcome.html")
 
+def crashes_by_month(request):
+    """
+    The analytics page
+    """
+    return render(request, "hello/crashes_by_month.html")
+
 def search(request):
     """
     The main search function. Options to search by state or city, returns # of accidents.
