@@ -1,96 +1,94 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-    <title>Modify</title>
-    <link rel="stylesheet" type = "text/css" href = "{% static 'css/style.css' %}">
-</head>
-</head>
-<body>
-    <nav>
-        <div class = "logo">
-            <h4>Car Accident Database</h4>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+        <title>Modify</title>
+        <link rel="stylesheet" type = "text/css" href = "{% static 'css/style.css' %}">
+    </head>
+    </head>
+    <body>
+        <nav>
+            <div class = "logo">
+                <h4>Car Accident Database</h4>
+            </div>
+            <ul class = "nav-links">
+                <li>
+                    <a href ="/hello/welcome/">Home</a>
+                </li>
+                <li>
+                    <a href ="/hello/search/">Search</a>
+                </li>
+                <li>
+                    <a href ="/hello/modify/">Modify</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div id = "wrapper">
+            <h1 class = "first-header">
+                Modify the Car Accident Database
+            </h1>
+            <h1>
+                Insert
+            </h1>
+
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{insert.as_p}}
+
+                <button type="submit" name='insert'>Insert</button>
+            </form>
+
+            <h1>
+                Delete
+            </h1>
+            <h2>
+                Note: Modifications will be made to all car accidents fitting the query</br>
+                Extra note: IDs are in the format "A-[Accident Number]". For example "A-1" for the first car accident in the CSV.
+            </h2>
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{delete}}
+
+                <button type="submit" name='delete'>Delete</button>
+            </form>
+
+            <br/>
+            <br/>
+
+            <h1>
+                Update
+            </h1>
+            <h2>
+                Note: We can only update one car accident at a time since we must specify the car accident to update with its ID number</br>
+            </h2>
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{update}}
+
+                <button type="submit" name='update'>Update</button>
+            </form>
+            <br/>
+            <br/>
+            <br/>
+
+            <h2>
+                Backup and Import buttons
+            </h2>
+            <form method='POST'>
+                {% csrf_token %}
+                {{backup.as_p}}
+                <button type="submit" name="backup">Create Backup</button>
+            </form>
+            <form method='POST'>
+                {% csrf_token %}
+                {{import.as_p}}
+                <button type="submit" name="import">Import</button>
+            </form>
         </div>
-        <ul class = "nav-links">
-            <li>
-                <a href ="/hello/welcome/">Home</a>
-            </li>
-            <li>
-                <a href ="/hello/search/">Search</a>
-            </li>
-            <li>
-                <a href ="/hello/modify/">Modify</a>
-            </li>
-        </ul>
-    </nav>
+    </body>
+</html>
 
-    <div id = "wrapper">
-        <h1>
-            Modify the Car Accident Database
-        </h1>
-        <h1>
-            Insert
-        </h1>
-
-        <form method="POST" action="">
-            {% csrf_token %}
-            {{insert.as_p}}
-
-            <button type="submit" name='insert'>Insert</button>
-        </form>
-
-        <br/>
-        <br/>
-
-        <h1>
-            Delete
-        </h1>
-        <h2>
-            Note: Modifications will be made to all car accidents fitting the query</br>
-            Extra note: IDs are in the format "A-[Accident Number]". For example "A-1" for the first car accident in the CSV.
-        </h2>
-        <form method="POST" action="">
-            {% csrf_token %}
-            {{delete}}
-
-            <button type="submit" name='delete'>Delete</button>
-        </form>
-
-        <br/>
-        <br/>
-
-        <h1>
-            Update
-        </h1>
-        <h2>
-            Note: We can only update one car accident at a time since we must specify the car accident to update with its ID number</br>
-        </h2>
-        <form method="POST" action="">
-            {% csrf_token %}
-            {{update}}
-
-            <button type="submit" name='update'>Update</button>
-        </form>
-        <br/>
-        <br/>
-        <br/>
-
-        <h2>
-            Backup and Import buttons
-        </h2>
-        <form method='POST'>
-            {% csrf_token %}
-            {{backup.as_p}}
-            <button type="submit" name="backup">Create Backup</button>
-        </form>
-        <form method='POST'>
-            {% csrf_token %}
-            {{import.as_p}}
-            <button type="submit" name="import">Import</button>
-        </form>
-    </div>
-    </html>
-</body>
