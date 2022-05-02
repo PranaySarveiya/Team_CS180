@@ -12,9 +12,8 @@
     text-align: center;
 }
 
-h1{
+.first-header{
     text-align: center;
-    margin-top: 90px;
 }
 
 nav{
@@ -23,7 +22,7 @@ nav{
     align-items: center;
     min-height: 8vh;
     background-color: #CED0CE;
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 100%;
 }
@@ -53,3 +52,4 @@ nav{
 .nav-links li{
     list-style: none;
 }
+
