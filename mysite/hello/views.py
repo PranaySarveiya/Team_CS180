@@ -20,7 +20,8 @@ statesName = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorad
                "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
-# US_Accidents_Dec21_updated.csv
+# US_Accidents_Dec21_updated
+#US_Accidents_60000_rows
 filename = "US_Accidents_60000_rows"
 currentBackup = ""
 accidents = dataset(filename)
@@ -130,9 +131,10 @@ def Top5States(request):
         
     print("2nd search-",time.time()-s_time)
 
-    states = zip(statesAbv, stateCount, percent)
+    states_full = zip(statesAbv, stateCount, percent)
     
-    states = sorted(states, key=lambda tup: tup[1], reverse = True)[:5]
+    states_full = sorted(states_full, key=lambda tup: tup[1], reverse = True)
+    states = states_full[0:4]
     # print(total)
     string = ""
     html_string = ""
@@ -149,9 +151,10 @@ def Top5States(request):
 
     #print(states)
     states_name, states_no, percent = zip(*states)
+    states_name_full , states_no_full, percent_full = zip(*states_full)
     
     return render(request, 'hello/top_5_states.html', 
-                   {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})
+                   {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'states_name_full' : states_name_full, 'states_no_full' : states_no_full})
 
 def DeleteRow(column, value):
     try:
