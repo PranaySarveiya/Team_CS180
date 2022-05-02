@@ -29,12 +29,21 @@
     <Folder Include="mysite\" />
     <Folder Include="mysite\hello\" />
     <Folder Include="mysite\hello\migrations\" />
+    <Folder Include="mysite\hello\templates\" />
+    <Folder Include="mysite\hello\templates\hello\" />
+    <Folder Include="mysite\hello\templates\hello\table\" />
     <Folder Include="mysite\hello\__pycache__\" />
     <Folder Include="mysite\mysite\" />
     <Folder Include="mysite\mysite\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mysite\db.sqlite3" />
+    <Content Include="mysite\hello\templates\hello\modify.html" />
+    <Content Include="mysite\hello\templates\hello\search.html" />
+    <Content Include="mysite\hello\templates\hello\state_select.html" />
+    <Content Include="mysite\hello\templates\hello\table\minimal-table.css" />
+    <Content Include="mysite\hello\templates\hello\top_5_states.html" />
+    <Content Include="mysite\hello\templates\hello\welcome.html" />
     <Content Include="mysite\hello\__pycache__\urls.cpython-310.pyc" />
     <Content Include="mysite\hello\__pycache__\views.cpython-310.pyc" />
     <Content Include="mysite\hello\__pycache__\__init__.cpython-310.pyc" />
@@ -46,9 +55,12 @@
   <ItemGroup>
     <Compile Include="mysite\hello\admin.py" />
     <Compile Include="mysite\hello\apps.py" />
+    <Compile Include="mysite\hello\csv_trim.py" />
+    <Compile Include="mysite\hello\forms.py" />
     <Compile Include="mysite\hello\migrations\__init__.py" />
     <Compile Include="mysite\hello\models.py" />
     <Compile Include="mysite\hello\csv_read.py" />
+    <Compile Include="mysite\hello\module1.py" />
     <Compile Include="mysite\hello\tests.py" />
     <Compile Include="mysite\hello\urls.py" />
     <Compile Include="mysite\hello\views.py" />

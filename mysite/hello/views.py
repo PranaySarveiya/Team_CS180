@@ -1,10 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
-from .forms import SearchForm
-from .forms import InsertForm
-from .forms import DeleteForm
-from .forms import UpdateForm
+from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm
 import math
 import time
 import os
@@ -200,7 +197,7 @@ def Backup():
     path = os.path.abspath(os.path.dirname(__file__))
     strList = accidents.toList()
 
-    with open(path + "\\" + filename + ".csv", "w+") as baseFile:
+    with open(path + "/" + filename + ".csv", "w+") as baseFile:
         for row in strList:
             baseFile.write(str(row))
 
@@ -220,10 +217,10 @@ def Backup():
 
         newFile.close()
 
-def Import():
+def Import(importChoice):
     path = os.path.abspath(os.path.dirname(__file__))
-    global accidents, currentBackup
-    updateDataset(accidents, "/backupCSV/" + currentBackup)
+    global accidents
+    updateDataset(accidents, "/backupCSV/" + importChoice)
         
 def Modify(request):
     #inserting
@@ -351,9 +348,10 @@ def Modify(request):
         Backup()
     #if the import button is clicked
     elif (request.method == 'POST' and 'import' in request.POST):
-        #TODO: implement importing stuff
-        print('Import')
-        Import()
+        form = ImportForm(request.POST)
+        if form.is_valid():
+            print('Import')
+            Import(form.cleaned_data['importChoice'])
     
     
 
@@ -362,4 +360,5 @@ def Modify(request):
     form = InsertForm()
     form2 = DeleteForm()
     form3 = UpdateForm()
-    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3})
+    form4 = ImportForm()
+    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3, 'import': form4})

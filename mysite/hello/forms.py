@@ -1,4 +1,5 @@
 from django import forms
+import os
 
 SEARCH_CHOICES = [
     ('state', 'State'),
@@ -20,6 +21,11 @@ DELETE_SELECT_CHOICES = [
     ('state', 'State'),
     ('city', 'City'),
 ]
+
+path = os.path.abspath(os.path.dirname(__file__))
+path += "/backupCSV/"
+
+IMPORT_CHOICES = []
 
 class SearchForm(forms.Form):
     category = forms.ChoiceField(label = 'Search by', choices = SEARCH_CHOICES)
@@ -43,3 +49,14 @@ class UpdateForm(forms.Form):
     updated_field = forms.ChoiceField(label = 'Field to update', choices = UPDATE_CHOICES)
     new_value = forms.CharField(label = 'New value for field')
 
+class ImportForm(forms.Form):
+    importChoice = forms.ModelChoiceField(label = "Import file", queryset = IMPORT_CHOICES)
+
+    def __init__(self):
+        super(ImportForm, self).__init__()
+
+        IMPORT_CHOICES.clear()
+        files = os.listdir(path)
+        for file in files:
+	        file = file.split(".csv")[0]
+	        IMPORT_CHOICES.append(tuple((file, file)))
