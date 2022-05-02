@@ -22,9 +22,13 @@ STATE_NAMES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colora
                "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
+
+# US_Accidents_Dec21_updated
+#US_Accidents_60000_rows
 FILENAME = "US_Accidents_60000_rows"
 CURRENT_BACKUP = ""
 ACCIDENTS = dataset(FILENAME)
+
 
 
 
