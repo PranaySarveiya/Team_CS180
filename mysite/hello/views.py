@@ -168,7 +168,7 @@ def DeleteRow(column, value):
     """
     try:
         # Delete the given rows
-        count = ccidents.removeRow(column, value)
+        count = accidents.removeRow(column, value)
 
         # Now write the changed dataset to the base file
         path = os.path.abspath(os.path.dirname(__file__))
@@ -208,27 +208,29 @@ def InsertRow(insert_row):
         path = os.path.abspath(os.path.dirname(__file__))
         with open(path + "/" + FILENAME + ".csv", "a") as dataWrite: # used the file created by csv_trim.py to test
             csv_string = ",".join(csv_row)
-            dataWrite.write(csv_string + "\n") #write to file
+            dataWrite.write(csv_string + "\n") # write to file
 
             accidents.addRow(csv_string.split(",")) #add to data structure
 
             dataWrite.close()
+
     except Exception as e:
         logging.error("Something went wrong when inserting")
         logging.error(e)
+
 def Backup():
     """
     Takes the current data and backs it up into a new csv file. Can be brought back with import
     """
     try:
         path = os.path.abspath(os.path.dirname(__file__))
-        str_list = accidents.toList()
+        strList = accidents.toList()
 
-        with open(path + "/" + filename + ".csv", "w+") as baseFile:
+        with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
             for row in strList:
                 baseFile.write(str(row))
 
-            base_file.close()
+            baseFile.close()
             
         backupPath = path + "/backupCSV/"
         if (not os.path.exists(backupPath)):
@@ -237,12 +239,12 @@ def Backup():
         global currentBackup
         currentBackup = FILENAME + "_backup_" + str(math.floor(time.time()))
 
-        with open(backupPath + "/" + currentBackup+ ".csv", "w+") as new_file:
+        with open(backupPath + "/" + currentBackup+ ".csv", "w+") as newFile:
             logging.info("Creating backup '" + currentBackup + ".csv'...")
-            for row in str_list:
-                new_file.write(str(row))
+            for row in strList:
+                newFile.write(str(row))
 
-            new_file.close()
+            newFile.close()
             
         updateImport()
             
@@ -289,7 +291,7 @@ def Modify(request):
     The main function for the insert, delete, modify, backup, and import functionality
     """
     try:
-        #inserting
+        # Inserting
         if (request.method == 'POST' and 'insert' in request.POST):
             #get user input
             form = InsertForm(request.POST)
@@ -313,7 +315,7 @@ def Modify(request):
                 #TODO: Somehow insert this information into our file
                 InsertRow(insertList)
 
-        #deleting
+        # Deleting
         elif (request.method == 'POST' and 'delete' in request.POST):
             #get user input
             form = DeleteForm(request.POST)
@@ -337,11 +339,11 @@ def Modify(request):
                 elif(selection == 'state'):
                     logging.info("delete by state")
                     DeleteRow(15, search_text)
-        #updating
+        # Updating
         elif (request.method == 'POST' and 'update' in request.POST):
             # Get user input
             form = UpdateForm(request.POST)
-            #check if input is valid
+            # Check if input is valid
             if form.is_valid():
                 # Puts the user input into variables
                 rowId = form.cleaned_data['id']
@@ -351,49 +353,49 @@ def Modify(request):
                 # Update specified field with new_value
                 if(updated_field == 'severity'):
                     logging.info('Update severity field')
-                    if (accidents.updateRow(1, rowId, new_value)):
+                    if (accidents.updateRow(1, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated severity field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update severity field for ID "  + str(rowId))
 
                 elif(updated_field == 'start_time'):
                     logging.info('Update start_time')
-                    if (accidents.updateRow(2, rowId, new_value)):
+                    if (accidents.updateRow(2, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated start_time field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update start_time field for ID "  + str(rowId))
 
                 elif(updated_field == 'end_time'):
                     logging.info('Update end_time')
-                    if (accidents.updateRow(3, rowId, new_value)):
+                    if (accidents.updateRow(3, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated end_time field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update end_time field for ID "  + str(rowId))
 
                 elif(updated_field == 'description'):
                     logging.info('Update description')
-                    if (accidents.updateRow(9, rowId, new_value)):
+                    if (accidents.updateRow(9, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated description field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update description field for ID "  + str(rowId))
 
                 elif(updated_field == 'street'):
                     logging.info('Update street')
-                    if (accidents.updateRow(11, rowId, new_value)):
+                    if (accidents.updateRow(11, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated street field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update street field for ID "  + str(rowId))
 
                 elif(updated_field == 'city'):
                     logging.info('Update city')
-                    if (accidents.updateRow(13, rowId, new_value)):
+                    if (accidents.updateRow(13, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated city field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update city field for ID "  + str(rowId))
 
                 elif(updated_field == 'state'):
                     logging.info('Update state')
-                    if (accidents.updateRow(15, rowId, new_value)):
+                    if (accidents.updateRow(15, rowId, new_value, FILENAME)):
                         logging.info("Successfully updated state field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update state field for ID "  + str(rowId))
@@ -401,7 +403,7 @@ def Modify(request):
                 path = os.path.abspath(os.path.dirname(__file__))
                 strList = accidents.toList()
 
-                with open(path + "/" + filename + ".csv", "w+") as baseFile:
+                with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
                     for row in strList:
                         baseFile.write(str(row))
 
