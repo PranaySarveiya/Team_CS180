@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
-from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm
+from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm, updateImport
 import math
 import time
 import os
@@ -217,6 +217,8 @@ def Backup():
 
         newFile.close()
 
+    updateImport()
+
 def Import(importChoice):
     path = os.path.abspath(os.path.dirname(__file__))
     global accidents
@@ -351,7 +353,7 @@ def Modify(request):
         form = ImportForm(request.POST)
         if form.is_valid():
             print('Import')
-            Import(form.cleaned_data['importChoice'])
+            Import(str(form.cleaned_data['importChoice']))
     
     
 
