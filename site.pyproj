@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="mysite\db.sqlite3" />
+    <Content Include="mysite\hello\templates\hello\crashes_by_month.html" />
     <Content Include="mysite\hello\templates\hello\modify.html" />
     <Content Include="mysite\hello\templates\hello\search.html" />
     <Content Include="mysite\hello\templates\hello\state_select.html" />

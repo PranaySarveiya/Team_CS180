@@ -26,6 +26,14 @@ DELETE_SELECT_CHOICES = [
 path = os.path.abspath(os.path.dirname(__file__))
 path += "/backupCSV/"
 
+def updateImport():
+    ImportFile.objects.all().delete()
+
+    files = os.listdir(path)
+    for backup in files:
+	    backup = backup.split(".csv")[0]
+	    aFile = ImportFile.objects.create(filename = backup)
+
 class SearchForm(forms.Form):
     category = forms.ChoiceField(label = 'Search by', choices = SEARCH_CHOICES)
     search_text = forms.CharField(label = 'Search')
@@ -47,14 +55,6 @@ class UpdateForm(forms.Form):
     id = forms.CharField(label = 'ID')
     updated_field = forms.ChoiceField(label = 'Field to update', choices = UPDATE_CHOICES)
     new_value = forms.CharField(label = 'New value for field')
-
-def updateImport():
-    ImportFile.objects.all().delete()
-
-    files = os.listdir(path)
-    for backup in files:
-	    backup = backup.split(".csv")[0]
-	    aFile = ImportFile.objects.create(filename = backup)
 
 class ImportForm(forms.Form):
     updateImport()

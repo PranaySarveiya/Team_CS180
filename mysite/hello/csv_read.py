@@ -157,26 +157,43 @@ class dataset:
 		# Return NoneType if nothing is found
 		return None
 
-	def updateRow(self, cmd, rowId, value):
+	def updateRow(self, cmd, rowId, value, filename):
 		# Get the row we want to change
 		for i in range(len(self.list)):
 			if self.list[i].ID == rowId:
 				print("Found row!")
 				# Then, change the specified column in the row
 				if (cmd == 1):
+					print("Updating severity for ID " + str(rowId))
 					self.list[i].severity = value
 				elif (cmd == 2):
+					print("Updating start_time for ID " + str(rowId))
 					self.list[i].start_time = value
 				elif (cmd == 3):
+					print("Updating end_time for ID " + str(rowId))
 					self.list[i].end_time = value
 				elif (cmd == 9):
+					print("Updating description for ID " + str(rowId))
 					self.list[i].description = value
 				elif (cmd == 11):
+					print("Updating street for ID " + str(rowId))
 					self.list[i].street = value
 				elif (cmd == 13):
+					print("Updating city for ID " + str(rowId))
 					self.list[i].city = value
 				elif (cmd == 15):
+					print("Updating state for ID " + str(rowId))
 					self.list[i].state = value
+
+				# Cast dataset into a list
+				strList = self.toList()
+
+				# Write out the list to the given file
+				with open(self.path + "/" + filename + ".csv", "w+") as updateFile:
+					for row in strList:
+						updateFile.write(str(row))
+
+					updateFile.close()
 
 				# Return 1 to say that the row was updated
 				return 1
