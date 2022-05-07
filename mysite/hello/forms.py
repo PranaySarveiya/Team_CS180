@@ -26,6 +26,9 @@ DELETE_SELECT_CHOICES = [
 path = os.path.abspath(os.path.dirname(__file__))
 path += "/backupCSV/"
 
+if (not os.path.exists(path)):
+    os.makedirs(path)
+
 def updateImport():
     ImportFile.objects.all().delete()
 
