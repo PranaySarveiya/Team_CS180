@@ -1,3 +1,4 @@
+from re import A
 from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
@@ -37,7 +38,7 @@ def crashes_by_month(request):
     The analytics page
     """
     return render(request, "hello/crashes_by_month.html")
-
+    
 def search(request):
     """
     The main search function. Options to search by state or city, returns # of accidents.
@@ -286,6 +287,12 @@ def Import(importChoice):
     global accidents
     updateDataset(accidents, "/backupCSV/" + importChoice)
 
+def heatmap(render):
+    """
+    heatmap of accidents in the US
+    """
+    pass
+
 def Modify(request):
     """
     The main function for the insert, delete, modify, backup, and import functionality
@@ -427,5 +434,4 @@ def Modify(request):
     form = InsertForm()
     form2 = DeleteForm()
     form3 = UpdateForm()
-    form4 = ImportForm()
-    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3, 'import': form4})
+    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3})
