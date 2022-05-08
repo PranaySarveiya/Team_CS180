@@ -5,13 +5,16 @@ from sre_parse import State
 import sys
 from typing import Final
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')   #Needed or thread issues will arise, check out: https://stackoverflow.com/questions/27147300/matplotlib-tcl-asyncdelete-async-handler-deleted-by-the-wrong-thread
 import matplotlib.pyplot as plt
+
 
 #x = -126 to -66
 #y = 24 to 50
 def update_scatter_plot(STATES_ABV):
     Accident_Lines = []
-    with open("US_Accidents_60000_rows.csv", "r") as file:
+    with open("hello/US_Accidents_60000_rows.csv", "r") as file:
         lines = file.readlines()
         goodLines = []
         for line in lines:
@@ -26,7 +29,7 @@ def update_scatter_plot(STATES_ABV):
 
 
     State_Lines = []    #State Name, Latitude, Longitude
-    with open("statelatlong.csv", "r") as locationData:
+    with open("hello/statelatlong.csv", "r") as locationData:
         lines = locationData.readlines()
         goodLines = []
         for line in lines:
@@ -65,7 +68,7 @@ def update_scatter_plot(STATES_ABV):
         x.append(float(row[2]))
         area.append((float(row[4])/float(row[3])) * 3000000)
     #area = np.pi * (25 * np.random.rand(51))**2
-    img = plt.imread("us_mercator.jpg")
+    img = plt.imread("hello/static/images/us_mercator.jpg")
     fig, ax = plt.subplots()
     ax.imshow(img, extent=[-126, -66, 24, 50])
     plt.xlabel("Latitude")
@@ -74,8 +77,8 @@ def update_scatter_plot(STATES_ABV):
     plt.xlim(-126, -66)
     plt.ylim(24, 50)
     plt.scatter(x, y, c="blue", linewidths=2, marker ="o", edgecolors="blue", s=area, alpha=0.2)
-    plt.savefig('scatter_plot.png')
-    plt.show()
+    plt.savefig('hello/static/images/scatter_plot.png')
+    #plt.show()
 
 
 

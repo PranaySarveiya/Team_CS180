@@ -250,7 +250,6 @@ def Backup():
             newFile.close()
             
         updateImport()
-        update_scatter_plot(STATES_ABV)
             
     except Exception as e:
         logging.error("Something went wrong when backing up")
@@ -424,6 +423,7 @@ def Modify(request):
             #TODO: create a backup when this button is clicked
             logging.info("Creating a backup...")
             Backup()
+            update_scatter_plot(STATES_ABV)
         #if the import button is clicked
         elif (request.method == 'POST' and 'import' in request.POST):
             form = ImportForm(request.POST)
