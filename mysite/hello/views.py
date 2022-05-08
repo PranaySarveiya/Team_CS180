@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
 from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm, updateImport
+from hello.scatter_plot import update_scatter_plot
 import math
 import time
 import os
@@ -38,7 +39,8 @@ def crashes_by_month(request):
     The analytics page
     """
     return render(request, "hello/crashes_by_month.html")
-    
+
+
 def search(request):
     """
     The main search function. Options to search by state or city, returns # of accidents.
@@ -248,6 +250,7 @@ def Backup():
             newFile.close()
             
         updateImport()
+        update_scatter_plot(STATES_ABV)
             
     except Exception as e:
         logging.error("Something went wrong when backing up")
