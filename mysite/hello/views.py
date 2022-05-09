@@ -146,12 +146,18 @@ def SeveritybyYear(request):
     SL_2020 = SeverityList[4]
     SL_2021 = SeverityList[5]
     
-    percent_2016 = [math.trunc(i/sum(SL_2016)*10000)/100 for i in SL_2016]
-    percent_2017 = [math.trunc(i/sum(SL_2017)*10000)/100 for i in SL_2017]
-    percent_2018 = [math.trunc(i/sum(SL_2018)*10000)/100 for i in SL_2018]
-    percent_2019 = [math.trunc(i/sum(SL_2019)*10000)/100 for i in SL_2019]
-    percent_2020 = [math.trunc(i/sum(SL_2020)*10000)/100 for i in SL_2020]
-    percent_2021 = [math.trunc(i/sum(SL_2021)*10000)/100 for i in SL_2021]
+    if(sum(SL_2016)):
+        percent_2016 = [math.trunc(i/sum(SL_2016)*10000)/100 for i in SL_2016]
+    if(sum(SL_2017)):
+        percent_2017 = [math.trunc(i/sum(SL_2017)*10000)/100 for i in SL_2017]
+    if(sum(SL_2018)):
+        percent_2018 = [math.trunc(i/sum(SL_2018)*10000)/100 for i in SL_2018]
+    if(sum(SL_2019)):
+        percent_2019 = [math.trunc(i/sum(SL_2019)*10000)/100 for i in SL_2019]
+    if(sum(SL_2020)):
+        percent_2020 = [math.trunc(i/sum(SL_2020)*10000)/100 for i in SL_2020]
+    if(sum(SL_2021)):
+        percent_2021 = [math.trunc(i/sum(SL_2021)*10000)/100 for i in SL_2021]
     
     # print("2016 list:",percent_2016, "sum: ", sum(SL_2016))
     # print("2017 list:",percent_2017, "sum: ", sum(SL_2017))
