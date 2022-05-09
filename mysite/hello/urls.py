@@ -9,5 +9,7 @@ urlpatterns = [
 	#path('search-state/', views.AccidentByState, name = 'search-state'),	#eventually probably want to make this it's own html page
 	path('top-5-states/', views.Top5States, name='top-5-states'),
 	path('modify/', views.Modify, name='modify'),
+	path('severity_by_year/', views.SeveritybyYear, name='severity_by_year'),
 	path('crashes_by_month/', views.crashes_by_month, name='crashes_by_month')
+	
 ]

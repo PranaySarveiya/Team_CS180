@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% comment %} <title>Simple table</title>
+    <link href="/hello/minimal-table.css" rel="stylesheet" type="text/css"> {% endcomment %}
+    <script src = "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        td {
+            border: solid 2px lightgrey;
+        }
+    </style>
+</head>
+ 
+ 
+<h1>
+    Severity By Year
+</h1>
+ 
+<table>
+    <tr>
+        <th> Severity % (1-5) </th>
+        <td> 1 </td>
+        <td> 2 </td>
+        <td> 3 </td>
+        <td> 4 </td>
+        <td> 5 </td>
+    </tr>
+    <tr>
+        <th>    2016 </th>
+        {%for P in percent_2016%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+    <tr>
+        <th> 2017 </th>
+        {%for P in percent_2017%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+    <tr>
+        <th> 2018 </th>
+        {%for P in percent_2018%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+    <tr>
+        <th> 2018 </th>
+        {%for P in percent_2018%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+    <tr>
+        <th> 2019 </th>
+        {%for P in percent_2019%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+    <tr>
+        <th> 2020</th>
+        {%for P in percent_2020%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+    <tr>
+        <th> 2021</th>
+        {%for P in percent_2021%}
+        <td> {{P}} </td>
+        {%endfor%}
+    </tr>
+</table>
+ 
+</br>
+</br>
+<div>
+    {% comment %} <canvas id="Chart2016" width="400" height="400"></canvas> {% endcomment %}
+</div>
+
+<script>
+    const ctx = document.getElementById('Chart2016').getContext('2d');
+    const Chart2016 = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+       
+          labels: ['1', '2', '3', '4', '5'],
+          
+          datasets: [{
+            label: 'Accident Severity in 2016',
+            data: [{%for P in percent_2016%}'{{P}}',{%endfor%}],
+            backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', ],
+          }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  }
+                }
+              }
+        },
+    });
+
+
+</script>
+<script>
+    const ctx = document.getElementById('Chart2017').getContext('2d');
+    const Chart2016 = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+       
+          labels: ['1', '2', '3', '4', '5'],
+          
+          datasets: [{
+            label: 'Accident Severity in 2017',
+            data: [{%for P in percent_2017%}'{{P}}',{%endfor%}],
+            backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', ],
+          }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  }
+                }
+              }
+        },
+    });
+</script>
+ 
+</html>
+
