@@ -8,7 +8,6 @@ import math
 import time
 import os
 import logging
-# Create your views here.
 
 #Global Variables:
 STATES_ABV = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", 
@@ -22,7 +21,7 @@ STATE_NAMES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colora
                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
 
-# US_Accidents_Dec21_updated
+#US_Accidents_Dec21_updated
 #US_Accidents_60000_rows
 FILENAME = "US_Accidents_60000_rows"
 currentBackup = ""
@@ -174,14 +173,14 @@ def DeleteRow(column, value):
         count = accidents.removeRow(column, value)
 
         # Now write the changed dataset to the base file
-        path = os.path.abspath(os.path.dirname(__file__))
-        strList = accidents.toList()
+        #path = os.path.abspath(os.path.dirname(__file__))
+        #strList = accidents.toList()
 
-        with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
-            for row in strList:
-                baseFile.write(str(row))
+        #with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
+        #    for row in strList:
+        #        baseFile.write(str(row))
 
-            baseFile.close()
+        #    baseFile.close()
 
         logging.info("Deleted " + str(count) + " rows")
         logging.info("Done Reading csv file for delete method")
@@ -209,13 +208,13 @@ def InsertRow(insert_row):
         csv_row[15] = insert_row[7] #state
         
         path = os.path.abspath(os.path.dirname(__file__))
-        with open(path + "/" + FILENAME + ".csv", "a") as dataWrite: # used the file created by csv_trim.py to test
-            csv_string = ",".join(csv_row)
-            dataWrite.write(csv_string + "\n") # write to file
+        #with open(path + "/" + FILENAME + ".csv", "a") as dataWrite: # used the file created by csv_trim.py to test
+        csv_string = ",".join(csv_row)
+        #dataWrite.write(csv_string + "\n") # write to file
 
-            accidents.addRow(csv_string.split(",")) #add to data structure
+        accidents.addRow(csv_string.split(",")) #add to data structure
 
-            dataWrite.close()
+        #dataWrite.close()
 
     except Exception as e:
         logging.error("Something went wrong when inserting")
@@ -321,7 +320,6 @@ def Modify(request):
                 ID = "A-" + str(int(latestID[1]) + 1)
                 insertList.extend((ID,str(severity), start_time, end_time, description, street, city, state))
                 
-                #TODO: Somehow insert this information into our file
                 InsertRow(insertList)
 
         # Deleting
@@ -412,11 +410,10 @@ def Modify(request):
                 path = os.path.abspath(os.path.dirname(__file__))
                 strList = accidents.toList()
 
-                with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
-                    for row in strList:
-                        baseFile.write(str(row))
-
-                    baseFile.close()
+                #with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
+                #    for row in strList:
+                #        baseFile.write(str(row))
+                #    baseFile.close()
                 
         #if the backup button is clicked
         elif (request.method == 'POST' and 'backup' in request.POST):

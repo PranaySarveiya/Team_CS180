@@ -189,11 +189,11 @@ class dataset:
 				strList = self.toList()
 
 				# Write out the list to the given file
-				with open(self.path + "/" + filename + ".csv", "w+") as updateFile:
-					for row in strList:
-						updateFile.write(str(row))
-
-					updateFile.close()
+				#with open(self.path + "/" + filename + ".csv", "w+") as updateFile:
+				#	for row in strList:
+				#		updateFile.write(str(row))
+				#
+				#	updateFile.close()
 
 				# Return 1 to say that the row was updated
 				return 1
