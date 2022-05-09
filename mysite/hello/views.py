@@ -482,6 +482,7 @@ def Modify(request):
             if form.is_valid():
                 logging.info("Importing from backup...")
                 Import(str(form.cleaned_data['importChoice']))
+                update_scatter_plot(STATES_ABV)
 
     except Exception as e:
         logging.error(e)
