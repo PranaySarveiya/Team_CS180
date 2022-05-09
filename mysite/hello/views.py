@@ -5,6 +5,7 @@ from hello.csv_read import dataset
 from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm, updateImport
 from hello.scatter_plot import update_scatter_plot
 import math
+from datetime import datetime
 import time
 import os
 import logging
@@ -122,7 +123,7 @@ def SearchByCity(request, search_param):
 def SeveritybyYear(request):
     SeverityList = [[0]*5 for i in range(6)]
 
-    for row in ACCIDENTS.list:
+    for row in accidents.list:
         date = datetime.strptime(row.start_time.split(" ")[0], "%Y-%m-%d")
         if (date.year == 2016):
             SeverityList[0][int(row.severity) - 1] += 1
