@@ -1,4 +1,6 @@
 from django import forms
+from hello.models import ImportFile
+import os
 
 SEARCH_CHOICES = [
     ('state', 'State'),
@@ -21,6 +23,20 @@ DELETE_SELECT_CHOICES = [
     ('city', 'City'),
 ]
 
+path = os.path.abspath(os.path.dirname(__file__))
+path += "/backupCSV/"
+
+if (not os.path.exists(path)):
+    os.makedirs(path)
+
+def updateImport():
+    ImportFile.objects.all().delete()
+
+    files = os.listdir(path)
+    for backup in files:
+	    backup = backup.split(".csv")[0]
+	    aFile = ImportFile.objects.create(filename = backup)
+
 class SearchForm(forms.Form):
     category = forms.ChoiceField(label = 'Search by', choices = SEARCH_CHOICES)
     search_text = forms.CharField(label = 'Search')
@@ -35,10 +51,14 @@ class InsertForm(forms.Form):
     state = forms.CharField(label = 'State')
 
 class DeleteForm(forms.Form):
-    selection = forms.ChoiceField(label = 'Select by', choices =DELETE_SELECT_CHOICES)
+    selection = forms.ChoiceField(label = 'Select by', choices = DELETE_SELECT_CHOICES)
     search_text = forms.CharField(label = 'Search')
     
 class UpdateForm(forms.Form):
     id = forms.CharField(label = 'ID')
     updated_field = forms.ChoiceField(label = 'Field to update', choices = UPDATE_CHOICES)
     new_value = forms.CharField(label = 'New value for field')
+
+class ImportForm(forms.Form):
+    updateImport()
+    importChoice = forms.ModelChoiceField(label = "Import file", widget = forms.Select, queryset = ImportFile.objects.all())

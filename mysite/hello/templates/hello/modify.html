@@ -24,6 +24,9 @@
                 <li>
                     <a href ="/hello/modify/">Modify</a>
                 </li>
+                <li>
+                    <a href ="/hello/crashes_by_month/">Analytics</a>
+                </li>
             </ul>
         </nav>
 
@@ -81,7 +84,7 @@
             <form method='POST'>
                 {% csrf_token %}
                 {{backup.as_p}}
-                <button type="submit" name="backup">Create Backup</button>
+                <button type="submit" name="backup"> Backup/Save </button>
             </form>
             <form method='POST'>
                 {% csrf_token %}

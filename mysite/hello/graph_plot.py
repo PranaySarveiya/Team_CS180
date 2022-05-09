@@ -55,3 +55,54 @@ if __name__ == '__main__':
 	plt.ylabel('Amount of crashes per month')
 	plt.title('Car Crashes per month 2016 - 2021')
 	plt.show()
+
+	# #getting plot of the car accident counts by the hour#########################################################################################
+	# hours = list(range(0, 24))
+	
+	# count = [0] * 24
+	# for row in accidents.list:
+	# 	hour = row.start_time.split(" ")[1].split(":")[0]
+	# 	count[int(hour)] += 1
+		
+		
+
+	# fig, ax = plt.subplots()
+	# bars = ax.bar(hours, count)
+	# ax.bar_label(bars)
+	# ax.set_xticks(hours)
+
+	# for bars in ax.containers:
+	# 	ax.bar_label(bars)
+	# plt.xlabel("Hours")
+	# plt.ylabel("Number of car accidents")
+	# plt.title('Car Crashes by Hours')
+	# plt.show()
+
+# #this snippet is to see all of the possible weather conditions#####################################################################################
+# allWeather = []
+# for row in accidents.list:
+# 	allWeather.append(row.weather_condition)
+# uniqueWeather = set(allWeather)
+# print(uniqueWeather)
+
+#creates a graph of accident counts for each of the listed weather conditions#####################################################################
+
+# weathers = ['Clear', 'Fair', 'Scattered Clouds', 'Smoke', 'Fog',  'Mist', 'Rain', 'Heavy Rain',  'Thunder', 'Snow']
+# counts = [0] * len(weathers)
+# for row in accidents.list:
+# 	for i in range (0, len(weathers)):
+# 		if(weathers[i] == row.weather_condition):
+# 			counts[i] += 1
+# 			break
+
+# fig, ax = plt.subplots()
+# bars = ax.bar(weathers, counts)
+# ax.bar_label(bars)
+
+
+# for bars in ax.containers:
+# 	ax.bar_label(bars)
+# plt.xlabel("Weather conditions")
+# plt.ylabel("Number of car accidents")
+# plt.title('Car Crashes by Weather Condition')
+# plt.show()	
