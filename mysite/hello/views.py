@@ -482,4 +482,5 @@ def Modify(request):
     form = InsertForm()
     form2 = DeleteForm()
     form3 = UpdateForm()
-    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3})
+    form4 = ImportForm()
+    return render(request, "hello/modify.html", {'insert': form, 'delete': form2, 'update': form3, 'import': form4})
