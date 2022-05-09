@@ -1,16 +1,13 @@
+from re import A
 from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
-from .forms import SearchForm
-from .forms import InsertForm
-from .forms import DeleteForm
-from .forms import UpdateForm
-from datetime import datetime
+from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm, updateImport
+from hello.scatter_plot import update_scatter_plot
 import math
 import time
 import os
 import logging
-# Create your views here.
 
 #Global Variables:
 STATES_ABV = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", 
@@ -24,14 +21,11 @@ STATE_NAMES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colora
                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
 
-# US_Accidents_Dec21_updated
+#US_Accidents_Dec21_updated
 #US_Accidents_60000_rows
 FILENAME = "US_Accidents_60000_rows"
-CURRENT_BACKUP = ""
-ACCIDENTS = dataset(FILENAME)
-
-
-
+currentBackup = ""
+accidents = dataset(FILENAME)
 
 def welcome(request):
     """
@@ -44,6 +38,7 @@ def crashes_by_month(request):
     The analytics page
     """
     return render(request, "hello/crashes_by_month.html")
+
 
 def search(request):
     """
@@ -91,7 +86,7 @@ def SearchByState(request, state_abbreviation):
     """
     try:
         cnt = 0
-        for row in ACCIDENTS.list:
+        for row in accidents.list:
             if row.state == state_abbreviation:
                 cnt += 1
         state_name = STATE_NAMES[STATES_ABV.index(state_abbreviation)]
@@ -114,7 +109,7 @@ def SearchByCity(request, search_param):
     """
     try:
         cnt = 0
-        for row in ACCIDENTS.list:
+        for row in accidents.list:
             if row.city == search_param:
                 cnt += 1
         message = "City " + search_param + " has " + str(cnt) + " accidents"
@@ -180,13 +175,13 @@ def Top5States(request):
     top_5_states.html (render): rendering of the table
     """
     try:
-        total = len(ACCIDENTS.list)
+        total = len(accidents.list)
         logging.info("total entries:", total)
         stateCount = [0] * 51
         percent = [0] * 51
 
         s_time = time.time()
-        for row in ACCIDENTS.list:
+        for row in accidents.list:
             pos = STATES_ABV.index(row.state)
             stateCount[pos] += 1
         for i in range(len(percent)):
@@ -223,17 +218,17 @@ def DeleteRow(column, value):
     """
     try:
         # Delete the given rows
-        count = ACCIDENTS.removeRow(column, value)
+        count = accidents.removeRow(column, value)
 
         # Now write the changed dataset to the base file
-        path = os.path.abspath(os.path.dirname(__file__))
-        strList = ACCIDENTS.toList()
+        #path = os.path.abspath(os.path.dirname(__file__))
+        #strList = accidents.toList()
 
-        with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
-            for row in strList:
-                baseFile.write(str(row))
+        #with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
+        #    for row in strList:
+        #        baseFile.write(str(row))
 
-            baseFile.close()
+        #    baseFile.close()
 
         logging.info("Deleted " + str(count) + " rows")
         logging.info("Done Reading csv file for delete method")
@@ -261,43 +256,48 @@ def InsertRow(insert_row):
         csv_row[15] = insert_row[7] #state
         
         path = os.path.abspath(os.path.dirname(__file__))
-        with open(path + "/" + FILENAME + ".csv", "a") as dataWrite: # used the file created by csv_trim.py to test
-            csv_string = ",".join(csv_row)
-            dataWrite.write(csv_string + "\n") #write to file
+        #with open(path + "/" + FILENAME + ".csv", "a") as dataWrite: # used the file created by csv_trim.py to test
+        csv_string = ",".join(csv_row)
+        #dataWrite.write(csv_string + "\n") # write to file
 
-            ACCIDENTS.addRow(csv_string.split(",")) #add to data structure
+        accidents.addRow(csv_string.split(",")) #add to data structure
 
-            dataWrite.close()
+        #dataWrite.close()
+
     except Exception as e:
         logging.error("Something went wrong when inserting")
         logging.error(e)
+
 def Backup():
     """
     Takes the current data and backs it up into a new csv file. Can be brought back with import
     """
     try:
         path = os.path.abspath(os.path.dirname(__file__))
-        str_list = ACCIDENTS.toList()
+        strList = accidents.toList()
 
-        with open(path + "\\" + FILENAME + ".csv", "w+") as base_file:
-            for row in str_list:
-                base_file.write(str(row))
+        with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
+            for row in strList:
+                baseFile.write(str(row))
 
-            base_file.close()
+            baseFile.close()
             
         backupPath = path + "/backupCSV/"
         if (not os.path.exists(backupPath)):
             os.makedirs(backupPath)
 
-        global CURRENT_BACKUP
-        CURRENT_BACKUP = FILENAME + "_backup_" + str(math.floor(time.time()))
+        global currentBackup
+        currentBackup = FILENAME + "_backup_" + str(math.floor(time.time()))
 
-        with open(backupPath + "/" + CURRENT_BACKUP + ".csv", "w+") as new_file:
-            logging.info("Creating backup '" + CURRENT_BACKUP + ".csv'...")
-            for row in str_list:
-                new_file.write(str(row))
+        with open(backupPath + "/" + currentBackup+ ".csv", "w+") as newFile:
+            logging.info("Creating backup '" + currentBackup + ".csv'...")
+            for row in strList:
+                newFile.write(str(row))
 
-            new_file.close()
+            newFile.close()
+            
+        updateImport()
+            
     except Exception as e:
         logging.error("Something went wrong when backing up")
         logging.error(e)
@@ -313,35 +313,41 @@ def updateDataset(current_accidents, import_set):
     """
     try:
         logging.info("Updating accident dataset...")
-        global ACCIDENTS
+        global accidents
         del current_accidents
 
         # Reload accident dataset with imported data
-        ACCIDENTS = dataset(import_set)
+        accidents = dataset(import_set)
 
         # Write over base dataset with imported data
         with open(os.path.abspath(os.path.dirname(__file__)) + "/" + FILENAME + ".csv", "w") as baseFile:
-            for row in ACCIDENTS.list:
+            for row in accidents.list:
                 baseFile.write(",".join(row.toList()))
 
         baseFile.close()
     except Exception as e:
         logging.error(e)
 
-
-def Import():
-    """The import functionality, which sets up and calls updateDataset with the backedup file"""
+def Import(importChoice):
+    """
+    The import functionality, which sets up and calls updateDataset with the backedup file
+    """
     path = os.path.abspath(os.path.dirname(__file__))
-    global ACCIDENTS, CURRENT_BACKUP
-    updateDataset(ACCIDENTS, "/backupCSV/" + CURRENT_BACKUP)
-        
+    global accidents
+    updateDataset(accidents, "/backupCSV/" + importChoice)
+
+def heatmap(render):
+    """
+    heatmap of accidents in the US
+    """
+    pass
 
 def Modify(request):
     """
     The main function for the insert, delete, modify, backup, and import functionality
     """
-    try:        
-        #inserting
+    try:
+        # Inserting
         if (request.method == 'POST' and 'insert' in request.POST):
             #get user input
             form = InsertForm(request.POST)
@@ -356,16 +362,15 @@ def Modify(request):
                 city = form.cleaned_data['city']
                 state = form.cleaned_data['state']
                 
-                insert_list = []
-                latestRow = ACCIDENTS.list[len(ACCIDENTS.list) - 1]
-                latest_ID = latestRow.ID.split("-")
-                ID = "A-" + str(int(latest_ID[1]) + 1)
-                insert_list.extend((ID,str(severity), start_time, end_time, description, street, city, state))
+                insertList = []
+                latestRow = accidents.list[len(accidents.list) - 1]
+                latestID = latestRow.ID.split("-")
+                ID = "A-" + str(int(latestID[1]) + 1)
+                insertList.extend((ID,str(severity), start_time, end_time, description, street, city, state))
                 
-                #TODO: Somehow insert this information into our file
-                InsertRow(insert_list)
+                InsertRow(insertList)
 
-        #deleting
+        # Deleting
         elif (request.method == 'POST' and 'delete' in request.POST):
             #get user input
             form = DeleteForm(request.POST)
@@ -389,77 +394,88 @@ def Modify(request):
                 elif(selection == 'state'):
                     logging.info("delete by state")
                     DeleteRow(15, search_text)
-        #updating
+        # Updating
         elif (request.method == 'POST' and 'update' in request.POST):
             # Get user input
             form = UpdateForm(request.POST)
-            #check if input is valid
+            # Check if input is valid
             if form.is_valid():
                 # Puts the user input into variables
-                row_Id = form.cleaned_data['id']
+                rowId = form.cleaned_data['id']
                 updated_field = form.cleaned_data['updated_field']
                 new_value = form.cleaned_data['new_value']
 
                 # Update specified field with new_value
                 if(updated_field == 'severity'):
                     logging.info('Update severity field')
-                    if (ACCIDENTS.updateRow(1, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated severity field for ID "  + str(row_Id))
+                    if (accidents.updateRow(1, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated severity field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update severity field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update severity field for ID "  + str(rowId))
 
                 elif(updated_field == 'start_time'):
                     logging.info('Update start_time')
-                    if (ACCIDENTS.updateRow(2, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated start_time field for ID "  + str(row_Id))
+                    if (accidents.updateRow(2, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated start_time field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update start_time field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update start_time field for ID "  + str(rowId))
 
                 elif(updated_field == 'end_time'):
                     logging.info('Update end_time')
-                    if (ACCIDENTS.updateRow(3, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated end_time field for ID "  + str(row_Id))
+                    if (accidents.updateRow(3, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated end_time field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update end_time field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update end_time field for ID "  + str(rowId))
 
                 elif(updated_field == 'description'):
                     logging.info('Update description')
-                    if (ACCIDENTS.updateRow(9, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated description field for ID "  + str(row_Id))
+                    if (accidents.updateRow(9, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated description field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update description field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update description field for ID "  + str(rowId))
 
                 elif(updated_field == 'street'):
                     logging.info('Update street')
-                    if (ACCIDENTS.updateRow(11, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated street field for ID "  + str(row_Id))
+                    if (accidents.updateRow(11, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated street field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update street field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update street field for ID "  + str(rowId))
 
                 elif(updated_field == 'city'):
                     logging.info('Update city')
-                    if (ACCIDENTS.updateRow(13, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated city field for ID "  + str(row_Id))
+                    if (accidents.updateRow(13, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated city field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update city field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update city field for ID "  + str(rowId))
 
                 elif(updated_field == 'state'):
                     logging.info('Update state')
-                    if (ACCIDENTS.updateRow(15, row_Id, new_value, FILENAME)):
-                        logging.info("Successfully updated state field for ID "  + str(row_Id))
+                    if (accidents.updateRow(15, rowId, new_value, FILENAME)):
+                        logging.info("Successfully updated state field for ID "  + str(rowId))
                     else:
-                        logging.warning("ERROR: Could not update state field for ID "  + str(row_Id))
+                        logging.info("ERROR: Could not update state field for ID "  + str(rowId))
+
+                path = os.path.abspath(os.path.dirname(__file__))
+                strList = accidents.toList()
+
+                #with open(path + "/" + FILENAME + ".csv", "w+") as baseFile:
+                #    for row in strList:
+                #        baseFile.write(str(row))
+                #    baseFile.close()
                 
         #if the backup button is clicked
         elif (request.method == 'POST' and 'backup' in request.POST):
             #TODO: create a backup when this button is clicked
             logging.info("Creating a backup...")
             Backup()
+            update_scatter_plot(STATES_ABV)
         #if the import button is clicked
         elif (request.method == 'POST' and 'import' in request.POST):
-            #TODO: implement importing stuff
-            logging.info("Importing from backup...")
-            Import()
+            form = ImportForm(request.POST)
+            if form.is_valid():
+                logging.info("Importing from backup...")
+                Import(str(form.cleaned_data['importChoice']))
+
     except Exception as e:
         logging.error(e)
     
