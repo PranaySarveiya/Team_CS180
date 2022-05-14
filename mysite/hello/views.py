@@ -34,11 +34,11 @@ def welcome(request):
     """
     return render(request, "hello/welcome.html")
 
-def crashes_by_month(request):
+def analytics(request):
     """
     The analytics page
     """
-    return render(request, "hello/crashes_by_month.html")
+    return render(request, "hello/analytics.html")
 
 
 def search(request):

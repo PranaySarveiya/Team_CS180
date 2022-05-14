@@ -10,6 +10,6 @@ urlpatterns = [
 	path('top-5-states/', views.Top5States, name='top-5-states'),
 	path('modify/', views.Modify, name='modify'),
 	path('severity_by_year/', views.SeveritybyYear, name='severity_by_year'),
-	path('crashes_by_month/', views.crashes_by_month, name='crashes_by_month')
+	path('analytics/', views.analytics, name='analytics')
 	
 ]

@@ -1,63 +1,57 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Search</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type = "text/css" href = "{% static 'css/style.css' %}">
-        <style>
-            form{
-                padding: 150px;
-            }
-        </style>
-    </head>
+{% extends './base.html' %}
+{%load static%}
 
+{% block title %} Search {% endblock %}
 
-    <body>
-        <nav>
-            <div class = "logo">
-                <h4>Car Accident Database</h4>
+{% block head %}
+<style>
+    .form-row{
+        background-color: yellow;
+        align-items: center;
+        
+    }
+    .col- label{
+        padding-top: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div id = "wrapper">
+    <h1 class = "first-header">
+        Search For Car Accident Reports
+    </h1>
+    <h2>
+        Enter the category for the search and the query <br/>
+        Note: Searching by state uses state abbreviations
+    </h2>
+    <div class="form-group" id = "search_form">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="row">
+                <div class = "col-">
+                    <label for = "search_by">Search by:</label>
+                </div>
+                <div class = "col-2">
+                    {{form.category}}
+                </div>
+                <div class = "col-">
+                    <label for = "search_text">Search:</label>
+                </div>
+                <div class = "col">
+                    {{form.search_text}}
+                </div>
+                <button type="submit" class="btn btn-dark">Search</button>
             </div>
-            <ul class = "nav-links">
-                <li>
-                    <a href ="/hello/welcome/">Home</a>
-                </li>
-                <li>
-                    <a href ="/hello/search/">Search</a>
-                </li>
-                <li>
-                    <a href ="/hello/modify/">Modify</a>
-                </li>
-                <li>
-                    <a href ="/hello/crashes_by_month/">Analytics</a>
-                </li>
-            </ul>
-        </nav>
-        <div id = "wrapper">
-            <h1 class = "first-header">
-                Search For Car Accident Reports
-            </h1>
-            <h2>
-                Enter the category for the search and the query <br/>
-                Note: Searching by state uses state abbreviations
-            </h2>
-
-            <form method="POST" action="">
-                {% csrf_token %}
-                {{form}}
-
-                <button type="submit">Submit</button>
-            </form>    
-
             
+        </form>
+    </div>
+       
+    <h2>
+        Car Accident Trivia:
+    </h2>
+    <a href = '/hello/top-5-states/'><p>Top 5 states for number of car accidents</p></a>
+    <a href = '/hello/severity_by_year/'><p>Severity percentage by year</p></a>
+</div>
+{% endblock %}
 
-            <h2>
-                Car Accident Trivia:
-            </h2>
-            <a href = '/hello/top-5-states/'><p>Top 5 states for number of car accidents</p></a>
-            <a href = '/hello/severity_by_year/'><p>Severity percentage by year</p></a>
-        </div>
-    </body>
-</html>
