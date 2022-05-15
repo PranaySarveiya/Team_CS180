@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
 from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm, updateImport
+from .graphs import Graphs
 from hello.scatter_plot import update_scatter_plot
 import math
 from datetime import datetime
@@ -27,6 +28,7 @@ STATE_NAMES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colora
 FILENAME = "US_Accidents_60000_rows"
 currentBackup = ""
 accidents = dataset(FILENAME)
+graphs = Graphs(accidents)
 
 def welcome(request):
     """
@@ -38,6 +40,7 @@ def analytics(request):
     """
     The analytics page
     """
+    graphs.toHTML()
     return render(request, "hello/analytics.html")
 
 
