@@ -412,8 +412,15 @@ def Cache(how_to_modify="", state=None, old_state=None, city=None, old_city=None
                 CITY_SEARCH_CACHE[city] = cnt
 
         elif how_to_modify == "insert":
-            STATE_SEARCH_CACHE[state] += 1
-            STATE_SEARCH_CACHE[city] += 1
+            if(STATE_SEARCH_CACHE.get(state) is not None):
+                STATE_SEARCH_CACHE[state] += 1
+            else:
+                STATE_SEARCH_CACHE[state] = 1
+
+            if(CITY_SEARCH_CACHE.get(city) is not None):
+                CITY_SEARCH_CACHE[city] += 1
+            else:
+                CITY_SEARCH_CACHE[city] = 1
 
         elif how_to_modify == "update":
             if state is not None:

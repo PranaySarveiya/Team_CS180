@@ -63,6 +63,7 @@
 
     <div class="form-group" id = "insert_form">
         <form method="POST" action="">
+            {% csrf_token %}
             {% for field in insert %}
                 <div class = "row">
                     <div class = "col-">
