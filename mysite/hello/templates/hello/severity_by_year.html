@@ -4,81 +4,127 @@
     <meta charset="utf-8">
     {% comment %} <title>Simple table</title>
     <link href="/hello/minimal-table.css" rel="stylesheet" type="text/css"> {% endcomment %}
-    <script src = "https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <script src="chartjs-plugin-doughnutlabel.js"></script>
     <style>
+      .year {
+        display:none;
+        padding:10px;
+      }
         td {
             border: solid 2px lightgrey;
         }
     </style>
 </head>
- 
+ <script>
+  $(document).ready(function(){
+    $('#yearSelect').on('change', function(){
+    	var selectVal = $(this).val(); 
+        $("div.year").hide();
+        $("#"+selectVal).show();
+    });
+});
+    </script>
  
 <h1>
     Severity By Year
 </h1>
- 
-<table>
-    <tr>
-        <th> Severity % (1-5) </th>
-        <td> 1 </td>
-        <td> 2 </td>
-        <td> 3 </td>
-        <td> 4 </td>
-        <td> 5 </td>
-    </tr>
-    <tr>
-        <th>    2016 </th>
-        {%for P in percent_2016%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-    <tr>
-        <th> 2017 </th>
-        {%for P in percent_2017%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-    <tr>
-        <th> 2018 </th>
-        {%for P in percent_2018%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-    <tr>
-        <th> 2018 </th>
-        {%for P in percent_2018%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-    <tr>
-        <th> 2019 </th>
-        {%for P in percent_2019%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-    <tr>
-        <th> 2020</th>
-        {%for P in percent_2020%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-    <tr>
-        <th> 2021</th>
-        {%for P in percent_2021%}
-        <td> {{P}} </td>
-        {%endfor%}
-    </tr>
-</table>
- 
-</br>
-</br>
-<div>
-    <canvas id="Chart2016" width="400" height="400"></canvas> 
-</div>
+{% comment %} full div {% endcomment %}
+<div class="container" style="display: flex; height: 50px;">
+  {% comment %} left div {% endcomment %}
+  <div style="width: 50%;">
+    <table>
+        <tr>
+            <th> Severity % (1-5) </th>
+            <td> 1 </td>
+            <td> 2 </td>
+            <td> 3 </td>
+            <td> 4 </td>
+            <td> 5 </td>
+        </tr>
+        <tr>
+            <th>    2016 </th>
+            {%for P in percent_2016%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+        <tr>
+            <th> 2017 </th>
+            {%for P in percent_2017%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+        <tr>
+            <th> 2018 </th>
+            {%for P in percent_2018%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+        <tr>
+            <th> 2018 </th>
+            {%for P in percent_2018%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+        <tr>
+            <th> 2019 </th>
+            {%for P in percent_2019%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+        <tr>
+            <th> 2020</th>
+            {%for P in percent_2020%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+        <tr>
+            <th> 2021</th>
+            {%for P in percent_2021%}
+            <td> {{P}} </td>
+            {%endfor%}
+        </tr>
+    </table>
+  </div>
 
+{% comment %} right div {% endcomment %}
+  <div style="width: 50%;">
+    <div>
+        <select class = "default" id = "yearSelect" name = "yearSelect" onChange = "switch()">
+            <option value="" selected="selected">Select a Year</option>
+            <option value = "2016"> 2016 </option>
+            <option value = "2017"> 2017 </option>
+            <option value = "2018"> 2018 </option>
+            <option value = "2019"> 2019 </option>
+            <option value = "2020"> 2020 </option>
+            <option value = "2021"> 2021 </option>
+        </select>
+    </div>
+    <div id = "2016" class = "year" style="width: 50%" style = "display:none">
+        <canvas id= "Chart2016" height="450" width="600"></canvas>
+    </div>
+    <div  id = "2017" class = "year" style="width: 50%" style = "display:none">
+        <canvas id= "Chart2017" height="450" width="600"></canvas>
+    </div>
+    <div  id = "2018" class = "year" style="width: 50%" style = "display:none">
+        <canvas id= "Chart2018" height="450" width="600"></canvas>
+    </div>
+    <div  id = "2019" class = "year" style="width: 50%" style = "display:none">
+        <canvas id= "Chart2019" height="450" width="600"></canvas>
+    </div>
+    <div  id = "2020" class = "year" style="width: 50%" style = "display:none">
+      <canvas id= "Chart2020" height="450" width="600"></canvas>
+    </div>
+    <div  id = "2021" class = "year" style="width: 50%" style = "display:none">
+      <canvas id= "Chart2021" height="450" width="600"></canvas>
+    </div>
+  </div>
+</div>
 <script>
-    const ctx = document.getElementById('Chart2016').getContext('2d');
-    const Chart2016 = new Chart(ctx, {
+    const ctx_2016 = document.getElementById('Chart2016').getContext('2d');
+    const Chart2016 = new Chart(ctx_2016, {
         type: 'doughnut',
         data: {
        
@@ -93,21 +139,23 @@
         options: {
             responsive: false,
             maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: '2016 Severity Chart'
+              },
             plugins: {
+
                 datalabels: {
                   formatter: (value) => {
                     return value + '%';
                   }
-                }
+                },
               }
         },
     });
 
-
-</script>
-<script>
-    const ctx = document.getElementById('Chart2017').getContext('2d');
-    const Chart2016 = new Chart(ctx, {
+    const ctx_2017 = document.getElementById('Chart2017').getContext('2d');
+    const Chart2017  = new Chart(ctx_2017, {
         type: 'doughnut',
         data: {
        
@@ -122,6 +170,127 @@
         options: {
             responsive: false,
             maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: '2017 Severity Chart'
+              },
+            plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  }
+                }
+              }
+        },
+    });
+
+    const ctx_2018 = document.getElementById('Chart2018').getContext('2d');
+    const Chart2018  = new Chart(ctx_2018, {
+        type: 'doughnut',
+        data: {
+       
+          labels: ['1', '2', '3', '4', '5'],
+          
+          datasets: [{
+            label: 'Accident Severity in 2018',
+            data: [{%for P in percent_2018%}'{{P}}',{%endfor%}],
+            backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', ],
+          }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: '2018 Severity Chart'
+              },
+            plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  }
+                }
+              }
+        },
+    });
+    const ctx_2019 = document.getElementById('Chart2019').getContext('2d');
+    const Chart2019  = new Chart(ctx_2019, {
+        type: 'doughnut',
+        data: {
+       
+          labels: ['1', '2', '3', '4', '5'],
+          
+          datasets: [{
+            label: 'Accident Severity in 2018',
+            data: [{%for P in percent_2019%}'{{P}}',{%endfor%}],
+            backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', ],
+          }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: '2019 Severity Chart'
+              },
+            plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  }
+                }
+              }
+        },
+    });
+    const ctx_2020 = document.getElementById('Chart2020').getContext('2d');
+    const Chart2020  = new Chart(ctx_2020, {
+        type: 'doughnut',
+        data: {
+       
+          labels: ['1', '2', '3', '4', '5'],
+          
+          datasets: [{
+            label: 'Accident Severity in 2018',
+            data: [{%for P in percent_2020%}'{{P}}',{%endfor%}],
+            backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', ],
+          }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: '2020 Severity Chart'
+              },
+            plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  }
+                }
+              }
+        },
+    });
+    const ctx_2021 = document.getElementById('Chart2021').getContext('2d');
+    const Chart2021  = new Chart(ctx_2021, {
+        type: 'doughnut',
+        data: {
+       
+          labels: ['1', '2', '3', '4', '5'],
+          
+          datasets: [{
+            label: 'Accident Severity in 2018',
+            data: [{%for P in percent_2021%}'{{P}}',{%endfor%}],
+            backgroundColor: [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', ],
+          }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: '2021 Severity Chart'
+              },
             plugins: {
                 datalabels: {
                   formatter: (value) => {
@@ -132,6 +301,7 @@
         },
     });
 </script>
- 
+
+
 </html>
 

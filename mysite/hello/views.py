@@ -121,52 +121,61 @@ def SearchByCity(request, search_param):
     return render(request, "hello/search.html", {'form': form})
 
 def SeveritybyYear(request):
-    SeverityList = [[0]*5 for i in range(6)]
+    """
+    User presses a button, severity by year is outputted in a table
 
-    for row in accidents.list:
-        date = datetime.strptime(row.start_time.split(" ")[0], "%Y-%m-%d")
-        if (date.year == 2016):
-            SeverityList[0][int(row.severity) - 1] += 1
-        elif (date.year == 2017):
-             SeverityList[1][int(row.severity) - 1] += 1
-        elif (date.year == 2018):
-            SeverityList[2][int(row.severity) - 1] += 1
-        elif (date.year == 2019):
-            SeverityList[3][int(row.severity) - 1] += 1
-        elif (date.year == 2020):
-            SeverityList[4][int(row.severity) - 1] += 1
-        elif (date.year == 2021):
-            SeverityList[5][int(row.severity) - 1] += 1
-            
-    print(SeverityList)
-    SL_2016 = SeverityList[0]
-    SL_2017 = SeverityList[1]
-    SL_2018 = SeverityList[2]
-    SL_2019 = SeverityList[3]
-    SL_2020 = SeverityList[4]
-    SL_2021 = SeverityList[5]
-    
-    if(sum(SL_2016)):
-        percent_2016 = [math.trunc(i/sum(SL_2016)*10000)/100 for i in SL_2016]
-    if(sum(SL_2017)):
-        percent_2017 = [math.trunc(i/sum(SL_2017)*10000)/100 for i in SL_2017]
-    if(sum(SL_2018)):
-        percent_2018 = [math.trunc(i/sum(SL_2018)*10000)/100 for i in SL_2018]
-    if(sum(SL_2019)):
-        percent_2019 = [math.trunc(i/sum(SL_2019)*10000)/100 for i in SL_2019]
-    if(sum(SL_2020)):
-        percent_2020 = [math.trunc(i/sum(SL_2020)*10000)/100 for i in SL_2020]
-    if(sum(SL_2021)):
-        percent_2021 = [math.trunc(i/sum(SL_2021)*10000)/100 for i in SL_2021]
-    
-    # print("2016 list:",percent_2016, "sum: ", sum(SL_2016))
-    # print("2017 list:",percent_2017, "sum: ", sum(SL_2017))
-    # print("2018 list:",percent_2018, "sum: ", sum(SL_2018))
-    # print("2019 list:",percent_2019, "sum: ", sum(SL_2019))
-    # print("2020 list:",percent_2020, "sum: ", sum(SL_2020))
-    # print("2021 list:",percent_2021, "sum: ", sum(SL_2021))
-    
-    # return HttpResponse("yo")
+    Returns:
+    severity_by_year.html (render): rendering of the table
+    """
+    try:
+        SeverityList = [[0]*5 for i in range(6)]
+
+        for row in accidents.list:
+            date = datetime.strptime(row.start_time.split(" ")[0], "%Y-%m-%d")
+            if (date.year == 2016):
+                SeverityList[0][int(row.severity) - 1] += 1
+            elif (date.year == 2017):
+                SeverityList[1][int(row.severity) - 1] += 1
+            elif (date.year == 2018):
+                SeverityList[2][int(row.severity) - 1] += 1
+            elif (date.year == 2019):
+                SeverityList[3][int(row.severity) - 1] += 1
+            elif (date.year == 2020):
+                SeverityList[4][int(row.severity) - 1] += 1
+            elif (date.year == 2021):
+                SeverityList[5][int(row.severity) - 1] += 1
+                
+        # print(SeverityList)
+        SL_2016 = SeverityList[0]
+        SL_2017 = SeverityList[1]
+        SL_2018 = SeverityList[2]
+        SL_2019 = SeverityList[3]
+        SL_2020 = SeverityList[4]
+        SL_2021 = SeverityList[5]
+        
+        if(sum(SL_2016)):
+            percent_2016 = [math.trunc(i/sum(SL_2016)*10000)/100 for i in SL_2016]
+        if(sum(SL_2017)):
+            percent_2017 = [math.trunc(i/sum(SL_2017)*10000)/100 for i in SL_2017]
+        if(sum(SL_2018)):
+            percent_2018 = [math.trunc(i/sum(SL_2018)*10000)/100 for i in SL_2018]
+        if(sum(SL_2019)):
+            percent_2019 = [math.trunc(i/sum(SL_2019)*10000)/100 for i in SL_2019]
+        if(sum(SL_2020)):
+            percent_2020 = [math.trunc(i/sum(SL_2020)*10000)/100 for i in SL_2020]
+        if(sum(SL_2021)):
+            percent_2021 = [math.trunc(i/sum(SL_2021)*10000)/100 for i in SL_2021]
+        
+        # print("2016 list:",percent_2016, "sum: ", sum(SL_2016))
+        # print("2017 list:",percent_2017, "sum: ", sum(SL_2017))
+        # print("2018 list:",percent_2018, "sum: ", sum(SL_2018))
+        # print("2019 list:",percent_2019, "sum: ", sum(SL_2019))
+        # print("2020 list:",percent_2020, "sum: ", sum(SL_2020))
+        # print("2021 list:",percent_2021, "sum: ", sum(SL_2021))
+        
+    except Exception as e:
+        logging.error(e)
+        
     return render(request, 'hello/severity_by_year.html', {'percent_2016': percent_2016,
                                                            'percent_2017': percent_2017,
                                                            'percent_2018': percent_2018,
