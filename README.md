@@ -2,7 +2,7 @@
 **Team Team's CS 180 Project**  
 
 **Contributors:**  
-Pranay Sarveiya, Justin Lyu, Tommy Chhur, Chandler Mahkorn 
+Pranay Sarveiya, Justin Lyu, Tommy Chhur, Chandler Mahkorn <br>
 [Dataset: US Accidents (2016 - 2021)](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)  
 
 **If you just want to run the server using this repo, follow this instruction**  
@@ -25,8 +25,10 @@ Done.
   
   
 **Instructions for setting up yourself**  
-Python libraries used:
+
+**Python libraries used:** <br> <br>
 If pip is not installed, follow instructions [here](https://pip.pypa.io/en/stable/installation/)
+
 matplotlib (For Creating Analyitc Graphs)
 
      \> pip install matplotlib
