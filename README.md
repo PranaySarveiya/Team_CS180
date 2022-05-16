@@ -2,7 +2,7 @@
 **Team Team's CS 180 Project**  
 
 **Contributors:**  
-Pranay Sarveiya, Justin Lyu, Tommy Chhur, Chandler Mahkorn, Fnu Azma  
+Pranay Sarveiya, Justin Lyu, Tommy Chhur, Chandler Mahkorn 
 [Dataset: US Accidents (2016 - 2021)](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)  
 
 **If you just want to run the server using this repo, follow this instruction**  
@@ -25,6 +25,16 @@ Done.
   
   
 **Instructions for setting up yourself**  
+Python libraries used:
+If pip is not installed, follow instructions [here](https://pip.pypa.io/en/stable/installation/)
+matplotlib (For Creating Analyitc Graphs)
+
+     \> pip install matplotlib
+     
+mpld3 (For Real-Time Graphs)
+
+     \> pip install mpld3
+     
 Following [this](https://docs.djangoproject.com/en/4.0/intro/tutorial01/) loosely, check for more details  
 First have django installed, check installation using:  
 
@@ -47,7 +57,7 @@ We can add apps using this command in the same directory as the manage.py
 this is the directory that will house your application. Check the instruction link for more details and examples.  
 From this point, keep following the instructions from the above link using 'hello' instead of 'polls.'  
 We modified hello/views.py, added and modified hello/urls.py, and modified mysite/urls.py.  
-After that, we can get a dummy output by going to http://localhost:8000/hello/  
+After that, we can get a dummy output by going to http://localhost:8000/hello/search
 <p>
      <br>
      <br>
