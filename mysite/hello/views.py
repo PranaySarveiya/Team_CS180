@@ -2,6 +2,7 @@ from re import A
 from django.shortcuts import render
 from django.http import HttpResponse
 from hello.csv_read import dataset
+from hello.cache import Cache
 from .forms import SearchForm, InsertForm, DeleteForm, UpdateForm, ImportForm, updateImport
 from .graphs import Graphs
 from hello.scatter_plot import update_scatter_plot
@@ -23,15 +24,13 @@ STATE_NAMES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colora
                "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", 'Wyoming']
 
-STATE_SEARCH_CACHE = dict()
-CITY_SEARCH_CACHE = dict()
-
 #US_Accidents_Dec21_updated
 #US_Accidents_60000_rows
 FILENAME = "US_Accidents_60000_rows"
 currentBackup = ""
 accidents = dataset(FILENAME)
 graphs = Graphs(accidents)
+cache = Cache()
 
 def welcome(request):
     """
@@ -68,10 +67,10 @@ def search(request):
                 #call function to return num of accidents in a state if category is state
                 if(category == 'state'):
                     #check cache:
-                    search_cache_result = Cache(how_to_modify="search", state=search_text)
+                    search_cache_result = cache.search(search_text)
                     if search_cache_result is not None:
                         print("Using Cache for", search_text)
-                        return HttpResponse(search_cache_result)
+                        return HttpResponse(search_text + " has " + str(search_cache_result) + " accidents")
 
                     if search_text in STATES_ABV:
                         return SearchByState(request, search_text)
@@ -80,10 +79,10 @@ def search(request):
                         logging.warning(search_text + " is not a state abbreviation or Top 5")   #for debugging
                         return render(request, "hello/search.html", {'form': form})
                 elif(category == 'city'):
-                    search_cache_result = Cache(how_to_modify="search", city=search_text)
+                    search_cache_result = cache.search(search_text)
                     if search_cache_result is not None:
                         print("Using Cache for", search_text)
-                        return HttpResponse(search_cache_result)
+                        return HttpResponse(search_text + " has " + str(search_cache_result) + " accidents")
 
                     return SearchByCity(request, search_text)
     except Exception as e:
@@ -108,9 +107,11 @@ def SearchByState(request, state_abbreviation):
                 cnt += 1
 
         #add to cache
-        print("before\n", "state cache:", STATE_SEARCH_CACHE)
-        Cache(how_to_modify="add", state=state_abbreviation, cnt=cnt)
-        print("after\n", "state cache:", STATE_SEARCH_CACHE)
+        print("Before:")
+        cache.printCache()
+        cache.add(state_abbreviation, cnt)
+        print("After:")
+        cache.printCache()
 
         state_name = STATE_NAMES[STATES_ABV.index(state_abbreviation)]
         return_message_to_user = state_name + " has " + str(cnt) + " accidents"
@@ -137,9 +138,12 @@ def SearchByCity(request, search_param):
                 cnt += 1
 
         #add to cache
-        print("before\n", "city cache:", CITY_SEARCH_CACHE)
+        print("before:")
+        cache.printCache()
         Cache(how_to_modify="add", city=search_param, cnt=cnt)
-        print("after\n", "city cache:", CITY_SEARCH_CACHE)
+        cache.add(search_param, cnt)
+        print("after:")
+        cache.printCache()
 
         message = "City " + search_param + " has " + str(cnt) + " accidents"
         return HttpResponse(message)
@@ -387,76 +391,6 @@ def heatmap(render):
     pass
 
 
-def Cache(how_to_modify="", state=None, old_state=None, city=None, old_city=None, cnt=None):
-    """
-    Cache used for Search functionality. Includes ways to search cache, manage cache, and clear cache
-    Parameters:
-        how_to_modify (str): can be "", "search", "add", "insert", "update", or "clear cache"
-        old_state and new_state (str): used for update function to update old city/state as well as new city/state.
-    How to Use:
-        used to update cache on certain function calls
-        search: used to find data from cache
-            needs state or city
-        add: used to add to cache after search
-            needs state or city, and cnt
-        insert: add to cache after insert function
-            needs state and city
-        update: currently unused
-        clear caches: clears both caches
-    """
-
-    try:
-        if how_to_modify == "":
-            raise Exception('Error: pass in value to how_to_modify')
-        if how_to_modify == "search":
-            if state is not None:
-                return STATE_SEARCH_CACHE.get(state)
-            else:
-                return CITY_SEARCH_CACHE.get(city)
-
-        elif how_to_modify == "add":
-            if state is not None:
-                STATE_SEARCH_CACHE[state] = cnt
-            else:
-                CITY_SEARCH_CACHE[city] = cnt
-
-        elif how_to_modify == "insert":
-            if(STATE_SEARCH_CACHE.get(state) is not None):
-                STATE_SEARCH_CACHE[state] += 1
-            else:
-                STATE_SEARCH_CACHE[state] = 1
-
-            if(CITY_SEARCH_CACHE.get(city) is not None):
-                CITY_SEARCH_CACHE[city] += 1
-            else:
-                CITY_SEARCH_CACHE[city] = 1
-
-        elif how_to_modify == "update":
-            if state is not None:
-                if STATE_SEARCH_CACHE[old_state] is not None:
-                    if STATE_SEARCH_CACHE[old_state] > 0:
-                        STATE_SEARCH_CACHE[old_state] -= 1
-                STATE_SEARCH_CACHE[state] += 1
-            else:
-                if CITY_SEARCH_CACHE[old_city] is not None:
-                    if CITY_SEARCH_CACHE[old_city] > 0:
-                        CITY_SEARCH_CACHE[old_city] -= 1
-                CITY_SEARCH_CACHE[city] += 1
-
-        elif how_to_modify == "clear city cache":
-            CITY_SEARCH_CACHE.clear()
-        elif how_to_modify == "clear state cache":
-            STATE_SEARCH_CACHE.clear()
-        elif how_to_modify == "clear caches":
-            STATE_SEARCH_CACHE.clear()
-            CITY_SEARCH_CACHE.clear()
-
-
-        else:
-            raise Exception('Error: else statement in Modify_Cache')
-    except Exception as e:
-        logging.error(e)
-
 
 
 def Modify(request):
@@ -488,9 +422,11 @@ def Modify(request):
                 InsertRow(insertList)
 
                 #add to cache
-                print("before\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
-                Cache(how_to_modify="insert", state=state, city=city)
-                print("after\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
+                print("before:")
+                cache.printCache()
+                cache.add(state, city)
+                print("after:")
+                cache.printCache() 
 
         # Deleting
         elif (request.method == 'POST' and 'delete' in request.POST):
@@ -516,9 +452,11 @@ def Modify(request):
                 elif(selection == 'state'):
                     logging.info("delete by state")
                     DeleteRow(15, search_text)
-                print("before\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)   
-                Cache(how_to_modify="clear caches")
-                print("after\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
+                print("before:")
+                cache.printCache()  
+                cache.clearCache()
+                print("after:")
+                cache.printCache()
         # Updating
         elif (request.method == 'POST' and 'update' in request.POST):
             # Get user input
@@ -570,9 +508,11 @@ def Modify(request):
                     logging.info('Update city')
                     if (accidents.updateRow(13, rowId, new_value, FILENAME)):
                         #update cache
-                        print("before\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
-                        Cache(how_to_modify="clear caches")
-                        print("after\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
+                        print("before:")
+                        cache.printCache()
+                        cache.clearCache()
+                        print("after:")
+                        cache.printCache()
                         logging.info("Successfully updated city field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update city field for ID "  + str(rowId))
@@ -581,9 +521,11 @@ def Modify(request):
                     logging.info('Update state')
                     if (accidents.updateRow(15, rowId, new_value, FILENAME)):
                         #update cache
-                        print("before\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
-                        Cache(how_to_modify="clear caches")
-                        print("after\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
+                        print("before:")
+                        cache.printCache()
+                        cache.clearCache()
+                        print("after:")
+                        cache.printCache()
                         logging.info("Successfully updated state field for ID "  + str(rowId))
                     else:
                         logging.info("ERROR: Could not update state field for ID "  + str(rowId))
@@ -610,9 +552,11 @@ def Modify(request):
                 Import(str(form.cleaned_data['importChoice']))
                 update_scatter_plot(STATES_ABV)
                 #update cache
-                print("before\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
-                Cache(how_to_modify="clear caches")
-                print("after\n", "state cache:", STATE_SEARCH_CACHE, "\ncity cache:", CITY_SEARCH_CACHE)
+                print("before:")
+                cache.printCache()
+                cache.clearCache()
+                print("after:")
+                cache.printCache()
 
     except Exception as e:
         logging.error(e)
