@@ -9,7 +9,6 @@ class Graphs():
 	def __init__(self, dataset, types):
 		self.path = os.path.abspath(os.path.dirname(__file__))
 		self.graphs = []
-		self.figures = []
 		self.getGraphs(dataset, types)
 
 	def getGraphs(self, dataset, types):
@@ -26,15 +25,10 @@ class Graphs():
 				barWeather = GraphWeather(dataset)
 				self.graphs.append(barWeather)
 
-	def toFigures(self):
-		for graph in self.graphs:
-			self.figures.append(mpld3.fig_to_html(graph.updateGraph()))
-
 	def toHTML(self):
 		divs = ""
-		self.toFigures()
-		for figure in self.figures:
-			divs += "<div>\n" + str(figure) + "</div>\n"
+		for graph in self.graphs:
+			divs += "<div>\n" + mpld3.fig_to_html(graph.updateGraph()) + "</div>\n"
 
 		HTML = f"""
 			{{% extends './base.html' %}}
