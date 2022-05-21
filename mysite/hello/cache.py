@@ -1,4 +1,5 @@
 import logging
+from multipledispatch import dispatch
 
 class Cache:
     def __init__(self):
@@ -15,7 +16,8 @@ class Cache:
             return self.AccidentsCache.get(name)
         except Exception as e:
             logging.error(e)
-
+    
+    @dispatch(str, int)
     def add(self, name: str, cnt: int) -> None:
         """
         Adds city/state to cache with its number of accidents
@@ -32,24 +34,31 @@ class Cache:
         except Exception as e:
             logging.error(e)
 
+    @dispatch(str, str)
     def add(self, state_name: str, city_name: str) -> None:
         """
         adds 1 city/state accident to the cache
+        used for insert statement
         state_name: state of the accident
         city: city of the accident
         """
         try:
-            if(self.AccidentsCache.get(state_name) == None):
-                self.AccidentsCache[state_name] = 1
+            if(self.AccidentsCache.get(state_name) is None):
+                #self.AccidentsCache[state_name] = self.search(state_name)
+                pass
             else:
                 self.AccidentsCache[state_name] += 1
-            if(self.AccidentsCache.get(city_name) == None):
-                self.AccidentsCache[city_name] = 1
+            if(self.AccidentsCache.get(city_name) is None):
+                #self.AccidentsCache[city_name] = self.search(city_name)
+                pass
             else:
                 self.AccidentsCache[city_name] += 1
         except Exception as e:
             logging.error(e)
     def printCache(self):
+        """
+        Prints out the cache
+        """
         try:
             for key, value in self.AccidentsCache.items():
                 print(key, ': ', value)
