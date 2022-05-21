@@ -37,6 +37,11 @@ mpld3 (For Real-Time Graphs)
 
      \> pip install mpld3
      
+mpld3 (For multiple dispatch decorator)
+
+     \> pip3 install multipledispatch
+
+
 Following [this](https://docs.djangoproject.com/en/4.0/intro/tutorial01/) loosely, check for more details  
 First have django installed, check installation using:  
 
