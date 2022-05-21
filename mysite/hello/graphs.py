@@ -1,22 +1,40 @@
 import mpld3
 import matplotlib.pyplot as plt
 import os
-from datetime import datetime, timedelta
 from .graph_plot import GraphPlot
 from .graph_bar_hour import GraphHour
 from .graph_bar_weather import GraphWeather
 
 class Graphs():
-	def __init__(self, accidents):
+	def __init__(self, dataset, types):
 		self.path = os.path.abspath(os.path.dirname(__file__))
-		self.plot = GraphPlot(accidents)
-		self.barHour = GraphHour(accidents)
-		self.barWeather = GraphWeather(accidents)
+		self.graphs = []
+		self.figures = []
+		self.getGraphs(dataset, types)
+
+	def getGraphs(self, dataset, types):
+		for graph in types:
+			if graph == 0:
+				plot = GraphPlot(dataset)
+				self.graphs.append(plot)
+
+			elif graph == 1:
+				barHour = GraphHour(dataset)
+				self.graphs.append(barHour)
+
+			elif graph == 2:
+				barWeather = GraphWeather(dataset)
+				self.graphs.append(barWeather)
+
+	def toFigures(self):
+		for graph in self.graphs:
+			self.figures.append(mpld3.fig_to_html(graph.updateGraph()))
 
 	def toHTML(self):
-		mpld3Plot = mpld3.fig_to_html(self.plot.updateGraph())
-		mpld3Hour = mpld3.fig_to_html(self.barHour.updateGraph())
-		mpld3Weather = mpld3.fig_to_html(self.barWeather.updateGraph())
+		divs = ""
+		self.toFigures()
+		for figure in self.figures:
+			divs += "<div>\n" + str(figure) + "</div>\n"
 
 		HTML = f"""
 			{{% extends './base.html' %}}
@@ -29,17 +47,7 @@ class Graphs():
 			{{%endblock%}}
 
 			{{%block body%}}
-			<div>
-				{mpld3Plot}
-			</div>
-
-			<div>
-				{mpld3Hour}
-			</div>
-
-			<div>
-				{mpld3Weather}
-			</div>
+			{divs}
 			<div class = image-container>
 				<img src="{{% static '/images/scatter_plot.png' %}}" alt="Crashes heatmap" width="90%" height="90%">
 			</div>

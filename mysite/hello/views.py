@@ -29,7 +29,7 @@ STATE_NAMES = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colora
 FILENAME = "US_Accidents_60000_rows"
 currentBackup = ""
 accidents = dataset(FILENAME)
-graphs = Graphs(accidents)
+graphs = Graphs(accidents, [0, 1, 2])
 cache = Cache()
 
 def welcome(request):
