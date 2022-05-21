@@ -56,6 +56,9 @@ class Cache:
         except Exception as e:
             logging.error(e)
     def printCache(self):
+        """
+        Prints out the cache
+        """
         try:
             for key, value in self.AccidentsCache.items():
                 print(key, ': ', value)
