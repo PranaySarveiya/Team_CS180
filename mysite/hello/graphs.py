@@ -13,15 +13,15 @@ class Graphs():
 
 	def getGraphs(self, dataset, types):
 		for graph in types:
-			if graph == 0:
+			if graph == "plot":
 				plot = GraphPlot(dataset)
 				self.graphs.append(plot)
 
-			elif graph == 1:
+			elif graph == "bar hour":
 				barHour = GraphHour(dataset)
 				self.graphs.append(barHour)
 
-			elif graph == 2:
+			elif graph == "bar weather":
 				barWeather = GraphWeather(dataset)
 				self.graphs.append(barWeather)
 
