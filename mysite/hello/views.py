@@ -140,7 +140,6 @@ def SearchByCity(request, search_param):
         #add to cache
         print("before:")
         cache.printCache()
-        Cache(how_to_modify="add", city=search_param, cnt=cnt)
         cache.add(search_param, cnt)
         print("after:")
         cache.printCache()
