@@ -27,20 +27,24 @@ Done.
 **Instructions for setting up yourself**  
 
 **Python libraries used:** <br> <br>
-If pip is not installed, follow instructions [here](https://pip.pypa.io/en/stable/installation/)
+*Django (To use as a web server)*
 
-matplotlib (For Creating Analyitc Graphs)
+*plotly (To make real-time graphs)*
 
-     \> pip install matplotlib
-     
-mpld3 (For Real-Time Graphs)
+*BeautifulSoup4 (To extract HTML divs from plotly figures)*
 
-     \> pip install mpld3
-     
-mpld3 (For multiple dispatch decorator)
+*mpld3 (To make a heat map)*
+ 
+*multipledispatch (For multiple dispatch decorator)*
 
-     \> pip3 install multipledispatch
+**
 
+
+>If pip is not installed, follow instructions [here](https://pip.pypa.io/en/stable/installation/)
+
+pip can automatically download the needed libaries using the following command:
+
+	\> pip3 install -r requirements.txt
 
 Following [this](https://docs.djangoproject.com/en/4.0/intro/tutorial01/) loosely, check for more details  
 First have django installed, check installation using:  
