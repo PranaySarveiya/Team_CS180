@@ -37,9 +37,6 @@ Done.
  
 *multipledispatch (For multiple dispatch decorator)*
 
-**
-
-
 >If pip is not installed, follow instructions [here](https://pip.pypa.io/en/stable/installation/)
 
 pip can automatically download the needed libaries using the following command:
