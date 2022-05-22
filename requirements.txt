@@ -1,0 +1,6 @@
+beautifulsoup4==4.11.1
+Django==4.0.4
+matplotlib==3.5.1
+multipledispatch==0.6.0
+numpy==1.22.3
+plotly==5.8.0
