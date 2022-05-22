@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from .graph_base import Graph
+from datetime import datetime
 import plotly.express as px
 
-class GraphPlot():
-	def __init__(self, accidents):
-		self.accidents = accidents
-		self.updateGraph()
+class GraphPlot(Graph):
+	def __init__(self, dataset):
+		super().__init__(dataset)
 
 	def updateGraph(self):
 		year = 2016
@@ -19,7 +19,7 @@ class GraphPlot():
 		count = [0] * 72
 		mult = 0
 
-		for row in self.accidents.list:
+		for row in self.dataset.list:
 			date = datetime.strptime(row.start_time.split(" ")[0], dateformat)
 
 			if (date.year == 2017):
@@ -51,6 +51,16 @@ class GraphPlot():
 
 		self.fig = px.line(x = months, y = count,
 			labels = dict(x = "Month of crash", y = "Number of car accidents")	
+		)
+
+		self.fig.update_layout(
+			autosize = True,
+			margin = dict(
+				l = 300,
+				r = 300,
+				b = 0,
+				t = 50
+			),
 		)
 
 		return self.fig
