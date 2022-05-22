@@ -1,9 +1,8 @@
-import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
+import plotly.express as px
 
 class GraphPlot():
 	def __init__(self, accidents):
-		self.figure = plt.figure(figsize = (18,8))
 		self.accidents = accidents
 		self.updateGraph()
 
@@ -12,15 +11,13 @@ class GraphPlot():
 		month = 1
 		day = 1
 
-		dates = []
 		dateformat = "%Y-%m-%d"
 		currentDate = datetime(year, month, day)
 
 		print("Rebuilding Plot Graph - Month...")
 		# Iterate through all dates between 2016 to the start of 2022
-		dates = [0] * 72
+		count = [0] * 72
 		mult = 0
-		x = []
 
 		for row in self.accidents.list:
 			date = datetime.strptime(row.start_time.split(" ")[0], dateformat)
@@ -37,25 +34,23 @@ class GraphPlot():
 				mult = 5
 
 			if (date.year == 2016):
-					dates[date.month - 1] += 1
+					count[date.month - 1] += 1
 			else:
-					dates[(date.month - 1) + (12 * mult)] += 1
+					count[(date.month - 1) + (12 * mult)] += 1
 
-		x = []
+		months = []
 		year = 2016
 		for i in range(1, 73):
 			if (i % 12 == 0):
 				tmp = datetime(year, 12, 1)
-				x.append(tmp.strftime("%b\n%y"))
+				months.append(tmp.strftime("%b %y"))
 				year += 1
 			else:
 				tmp = datetime(year, i % 12, 1)
-				x.append(tmp.strftime("%b\n%y"))
+				months.append(tmp.strftime("%b %y"))
 
-		# Display the data as a graph
-		plt.plot(x, dates)
-		plt.xlabel('Month of crash')
-		plt.ylabel('Amount of crashes per month')
-		plt.title('Car Crashes per month 2016 - 2021')
+		self.fig = px.line(x = months, y = count,
+			labels = dict(x = "Month of crash", y = "Number of car accidents")	
+		)
 
-		return self.figure
+		return self.fig

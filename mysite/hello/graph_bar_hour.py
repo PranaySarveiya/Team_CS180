@@ -1,8 +1,7 @@
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 class GraphHour:
 	def __init__(self, accidents):
-		self.figure = plt.figure(figsize = (18,8))
 		self.accidents = accidents
 		self.updateGraph()
 
@@ -16,18 +15,9 @@ class GraphHour:
 			hour = row.start_time.split(" ")[1].split(":")[0]
 			count[int(hour)] += 1
 		
-		
 
-		fig, ax = plt.subplots(figsize=(18, 8))
-		bars = ax.bar(hours, count)
-		ax.bar_label(bars)
-		ax.set_xticks(hours)
+		self.fig = px.bar(x = hours, y = count,
+			labels = dict(x = "Hour", y = "Number of car accidents")	   
+		)
 
-		for bars in ax.containers:
-			ax.bar_label(bars)
-
-		plt.xlabel("Hours")
-		plt.ylabel("Number of car accidents")
-		plt.title('Car Crashes by Hours')
-
-		return fig
+		return self.fig

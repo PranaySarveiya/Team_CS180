@@ -1,9 +1,9 @@
-import mpld3
-import matplotlib.pyplot as plt
-import os
 from .graph_plot import GraphPlot
 from .graph_bar_hour import GraphHour
 from .graph_bar_weather import GraphWeather
+from bs4 import BeautifulSoup
+import os
+import plotly
 
 class Graphs():
 	def __init__(self, dataset, types):
@@ -28,7 +28,8 @@ class Graphs():
 	def toHTML(self):
 		divs = ""
 		for graph in self.graphs:
-			divs += "<div>\n" + mpld3.fig_to_html(graph.updateGraph()) + "</div>\n"
+			soup = BeautifulSoup(plotly.io.to_html(graph.updateGraph()), features="html.parser")
+			divs += "<div>\n" + str(soup.findAll('div')) + "</div>\n"
 
 		HTML = f"""
 			{{% extends './base.html' %}}

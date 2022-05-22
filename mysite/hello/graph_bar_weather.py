@@ -1,8 +1,7 @@
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 class GraphWeather():
 	def __init__(self, accidents):
-		self.figure = plt.figure(figsize = (18,8))
 		self.accidents = accidents
 		self.updateGraph()
 
@@ -20,24 +19,16 @@ class GraphWeather():
 		# Creates a graph of accident counts for each of the listed weather conditions
 		print("Rebuilding Bar Graph - Weather...")
 
-		weathers = ['Clear', 'Fair', 'Scattered Clouds', 'Smoke', 'Fog',  'Mist', 'Rain', 'Heavy Rain',  'Thunder', 'Snow']
-		counts = [0] * len(weathers)
+		weather = ['Clear', 'Fair', 'Scattered Clouds', 'Smoke', 'Fog',  'Mist', 'Rain', 'Heavy Rain',  'Thunder', 'Snow']
+		count = [0] * len(weather)
 		for row in self.accidents.list:
-			for i in range (0, len(weathers)):
-				if(weathers[i] == row.weather_condition):
-					counts[i] += 1
+			for i in range (0, len(weather)):
+				if(weather[i] == row.weather_condition):
+					count[i] += 1
 					break
 
-		fig, ax = plt.subplots(figsize=(18, 8))
-		bars = ax.bar(weathers, counts)
-		ax.bar_label(bars)
+		self.fig = px.bar(x = weather, y = count,
+			labels = dict(x = "Weather conditions", y = "Number of car accidents")	   
+		)
 
-
-		for bars in ax.containers:
-			ax.bar_label(bars)
-
-		plt.xlabel("Weather conditions")
-		plt.ylabel("Number of car accidents")
-		plt.title('Car Crashes by Weather Condition')
-
-		return fig
+		return self.fig
