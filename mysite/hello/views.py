@@ -222,6 +222,12 @@ def Top5States(request):
     top_5_states.html (render): rendering of the table
     """
     try:
+        top5_cache_result = cache.search("top5")
+        if top5_cache_result is not None: #check cache
+            states, states_name, states_no, percent, html_string = top5_cache_result
+            print("using cache")
+            return render(request, 'hello/top_5_states.html', 
+                    {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})
         total = len(accidents.list)
         logging.info("total entries:", total)
         stateCount = [0] * 51
@@ -248,6 +254,11 @@ def Top5States(request):
         logging.info(states)
         states_name, states_no, percent = zip(*states)
         
+        #caching
+        top5_cache_info = (states, states_name, states_no, percent, html_string)
+        print("adding to cache")
+        cache.add(top5_cache_info)
+
         return render(request, 'hello/top_5_states.html', 
                     {'states' : states, 'states_name' : states_name, 'states_no' : states_no ,'percent' : percent ,'html_string' : html_string})
     except Exception as e:

@@ -5,6 +5,7 @@ class Cache:
     def __init__(self):
         self.AccidentsCache = {}
 
+    @dispatch(str)
     def search(self, name: str) -> str:
         """
         Searches cache for # of accidents in inputted state/city name
@@ -16,7 +17,7 @@ class Cache:
             return self.AccidentsCache.get(name)
         except Exception as e:
             logging.error(e)
-    
+
     @dispatch(str, int)
     def add(self, name: str, cnt: int) -> None:
         """
@@ -55,6 +56,12 @@ class Cache:
                 self.AccidentsCache[city_name] += 1
         except Exception as e:
             logging.error(e)
+
+    @dispatch(tuple)
+    def add(self, info: tuple) -> None:
+        self.AccidentsCache["top5"] = info
+
+
     def printCache(self):
         """
         Prints out the cache
