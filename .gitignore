@@ -3,9 +3,7 @@ mysite/mysite/__pycache__/
 mysite/hello/migrations/__pycache__/
 mysite/US_Accidents_Dec21_updated.csv
 mysite/hello/US_Accidents_Dec21_updated.csv
-mysite/hello/US_Accidents_Dec21_updated_deletethisendpart.csv
-mysite/hello/backupCSV/US_Accidents_Dec21_updated_backup.csv
+mysite/hello/backupCSV/*
 mysite/db.sqlite3
 .vscode/
 .vs/
-*.csv
